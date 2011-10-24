@@ -35,17 +35,13 @@ describe "LogStore", ->
 
   describe ".on 'log', callback=({server,date,category,codeSource,clientInfo:{ip,id,siteid,userid}})->", ->
     it 'when log, calls callback', ->
-      ls2 = new LogStore host: '127.0.0.1', port:dbmgr.port, dbid: curdbid
-      ls3 = new LogStore host: '127.0.0.1', port:dbmgr.port, dbid: curdbid
       lp = new LogPublisher host: '127.0.0.1', port:dbmgr.port, dbid: curdbid
-      @after ->
-        ls2.end()
-        ls3.end()
-        lp.end()
+      lss = for i in [0...3] then new LogStore host: '127.0.0.1', port:dbmgr.port, dbid: curdbid
+      @after -> for lsx in [lp, lss...] then lsx.end()
 
       l = mocklog()
       logsReceived = 0
-      for lsx in [ls,ls2,ls3]
+      for lsx in lss
         lsx.on 'log', (log)->
           expect(log).toEqual l
           ++logsReceived

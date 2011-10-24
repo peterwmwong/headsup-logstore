@@ -1,0 +1,18 @@
+{
+  "author": "Peter Wong <peter.wm.wong@gmail.com>",
+  "name": "headsup-logstore",
+  "version": "0.0.0",
+  "repository": {
+    "url": "https://github.com/peterwmwong/headsup-logstore"
+  },
+  "main": "lib/index.js",
+  "engines": {
+    "node": "~0.5.11"
+  },
+  "dependencies": {
+    "redis": "~0.6.7"
+  },
+  "devDependencies": {
+    "jasmine-node": "*"
+  }
+}

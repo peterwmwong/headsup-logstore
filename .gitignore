@@ -1,0 +1,5 @@
+# Temp Files #
+##############
+*.swp
+
+node_modules/

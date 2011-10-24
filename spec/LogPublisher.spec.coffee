@@ -1,7 +1,7 @@
 LogStore = require '../lib/LogStore'
 LogPublisher = require '../lib/LogPublisher'
 {createServer} = require './util/redis-remote'
-{notyet,mocklog,runUntil,toHash} = require './util/SpecHelpers'
+{mocklog,runUntil,toHash} = require './util/SpecHelpers'
 redis = require 'redis'
 
 L = console.log.bind console
@@ -75,10 +75,8 @@ describe "LogPublisher", ->
   describe ".end()", ->
     it "closes connection, log() sends error to callbacks", ->
       lp.end()
-      runUntil (done)->
-        lp.log mocklog(), (e)->
-          expect(e).toBe "Connection closed"
-          done()
+      lp.log mocklog(), (e)->
+        expect(e).toBe "Connection closed"
 
 
   # Salting a date prevents equal scores of log entries of the same date

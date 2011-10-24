@@ -1,7 +1,7 @@
 LogStore = require '../lib/LogStore'
 LogPublisher = require '../lib/LogPublisher'
 {createServer} = require './util/redis-remote'
-{notyet,mocklog,runUntil,toHash} = require './util/SpecHelpers'
+{notyet,mocklog,runUntil} = require './util/SpecHelpers'
 redis = require 'redis'
 
 L = console.log.bind console
@@ -29,11 +29,9 @@ describe "LogStore", ->
 
   describe ".end()", ->
     it "closes connection, get() sends error to callbacks", ->
-      runUntil (done)->
-        ls.end()
-        ls.get {}, (e)->
-          expect(e).toBe "Connection closed"
-          done()
+      ls.end()
+      ls.get {}, (e)->
+        expect(e).toBe "Connection closed"
 
   describe ".on 'log', callback=({server,date,category,codeSource,clientInfo:{ip,id,siteid,userid}})->", ->
     it 'when log, calls callback', ->
@@ -55,7 +53,6 @@ describe "LogStore", ->
       runs -> lp.log l
       waitsFor -> logsReceived >= 3
 
-  ###
   describe ".get()", ->
     DEFAULT_COUNT = 25
 
@@ -64,11 +61,11 @@ describe "LogStore", ->
 
       it "returns last X log entries, if X < #{DEFAULT_COUNT}", notyet
 
-    describe ".get limit: {server:''}", ->
+    describe ".get limit: {server}", ->
       it "returns nothing, when server is null, undefined, bogus", notyet
       it "returns last #{DEFAULT_COUNT} log entries, from specified server", notyet
 
-    describe ".get limit: {clientip:''}", ->
+    describe ".get limit: {clientip}", ->
       it "returns nothing, when clientip is null, undefined, bogus", notyet
       it "returns last #{DEFAULT_COUNT} log entries, from specified clientip", notyet
 
@@ -77,7 +74,6 @@ describe "LogStore", ->
       it 'returns nothing when id is undefined', notyet
       it 'returns nothing when id is negative', notyet
       it 'returns nothing when id is greater then last id', notyet
-  ###
 
   it 'TEST TEARDOWN', ->
     db.end()

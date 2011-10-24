@@ -9,7 +9,7 @@ Getting Started
 
 ### [Install redis](http://redis.io/download)
 
-*Make sure to add redis/src to PATH, so redis-server is a command.*
+- **Make sure to add redis/src to PATH, so redis-server is a command.**
 
 ### Get the code
 
@@ -22,7 +22,8 @@ Getting Started
 
 
 Credit
-======
+------
+
 * [CoffeeScript](http://jashkenas.github.com/coffee-script/) - Better than JavaScript
 * [Redis](http://redis.io/) - Key-Value Store
 * [Node Redis](https://github.com/mranney/node_redis) - Redis client for Node.js

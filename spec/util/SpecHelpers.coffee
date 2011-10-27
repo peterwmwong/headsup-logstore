@@ -2,9 +2,8 @@ randint = (max)-> Math.ceil Math.random()*max
 module.exports =
   notyet: -> @fail '>> Not implemented yet <<'
   mocklog: (overrides)->
-    {server,date,category,codeSource,clientInfo} = overrides or {}
+    {date,category,codeSource,clientInfo} = overrides or {}
     {ip,id,siteid,userid} = clientInfo or {}
-    server: server or "mockServer"
     date: date or Date.now()
     category: category or "MOCK#{randint 10}"
     codeSource: codeSource or 'mockCodeSource'
@@ -20,8 +19,8 @@ module.exports =
       cb -> isdone = true
     waitsFor (-> isdone),2000
 
-  toHash: (l)->
-    server: l.server
+  toHash: (l,logid)->
+    logid: logid.toString()
     date: l.date.toString()
     category: l.category
     codeSource: l.codeSource

@@ -2,12 +2,15 @@
 {EventEmitter} = require 'events'
 redis = require 'redis'
 
-LogPublisher = (opts)->
-  {port,host,dbid} = opts or {}
+LogPublisher = ({@context,port,host,dbid})->
+  if not @context? then throw 'No @context was supplied.'
+
   for conn in ['_db','_pub']
     @[conn] = redis.createClient port, host
     @[conn].select dbid if dbid
 
+  # Salting a date prevents equal scores of log entries of the same date
+  # (log entries on the same millisecond)
   prevdate = -1
   prevsalt = 0
   @_saltDate = (date)->
@@ -26,31 +29,40 @@ LogPublisher::[k]=v for k,v of do->
       @[conn]?.end()
       delete @[conn]
 
-  log: (entry,cb)->
+  log: (entries,cb=->)->
     if @_checkConn cb
-      if not entry? then cb "Log entry was null or undefined"
+      if not (entries instanceof Array) then cb "Log entries must be an Array"
       else
-        {server,date,category,codeSource,clientInfo} = entry
-        {ip,id,siteid,userid} = clientInfo or {}
-        if not server? then cb "Log entry lacks 'server'"
+        logs = []
+        hashes = for el in entries when el and typeof el is 'object'
+          logs.push el
+          @_toHash el
+        numFailed = entries.length - hashes.length
+
+        # No worthy log entries
+        if hashes.length is 0
+          if numFailed then cb {numFailed}
+          else cb()
+
         else
-          @_db.incr "nextlogid:#{server}", (e,logid)=>
-            if e then cb e 
-            else
-              @_db.multi()
-                .hmset("log:#{server}:#{logid}", {
-                  server: server
-                  date: date
-                  category: category
-                  codeSource: codeSource
-                  ci_ip: ip
-                  ci_id: id
-                  ci_siteid: siteid
-                  ci_userid: userid
-                })
-                .zadd("timeline:#{server}", @_saltDate(date), logid)
-                .exec cb 
-              @_pub.publish 'log', JSON.stringify entry
+          # Reserve X number of log ids (X = hashes.length)
+          @_db.incrby "nextlogid", hashes.length, (e,logid)=>
+            logid = logid - hashes.length
+            $M = @_db.multi()
+            for h in hashes
+              h.logid = logid
+              $M.hmset "log:#{logid}", h
+              $M.zadd "context:#{@context}", (sdate = @_saltDate(h.date)), logid
+              if ip = h.ci_ip
+                $M.zadd "ip:#{ip}", sdate, logid
+                $M.zadd "context_ip:#{@context}:#{ip}", sdate, logid
+              $M.zadd "all", sdate, logid
+              ++logid
+            $M.exec (dbError)=>
+              @_pub.publish 'log', JSON.stringify logs
+              if numFailed or dbError then cb {numFailed,dbError}
+              else cb()
+
 
   _checkConn: (cb)->
     if not @_db?
@@ -58,5 +70,19 @@ LogPublisher::[k]=v for k,v of do->
       false
     else
       true
+
+  _toHash: (e)->
+    hash =
+      date: e.date
+      category: e.category
+      codeSource: e.codeSource
+
+    if ci = e.clientInfo
+      hash.ci_ip = ci.ip if ci.ip
+      hash.ci_id = ci.id if ci.id
+      hash.ci_siteid = ci.siteid if ci.siteid
+      hash.ci_userid = ci.userid if ci.userid
+
+    hash
 
 module.exports = LogPublisher

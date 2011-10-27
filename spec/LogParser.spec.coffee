@@ -11,14 +11,12 @@ describe 'LogParser', ->
     it 'parses message only Log Entry, uses parse context', ->
       msg = '123 1241 sdflksd 87324 sk !@%!@%'
       ctx =
-        server: 'server1'
         date: Date.now()
         category: 'cat'
         codeSource: 'codesrc'
         clientInfo: 'ci'
       
       expect(parse msg, ctx).toEqual [
-        server: ctx.server
         date: ctx.date
         category: ctx.category
         codeSource: ctx.codeSource
@@ -40,28 +38,6 @@ describe 'LogParser', ->
         msg: 'Initialization processed in 422 ms'
       ]
 
-    it 'parses full Log Entry, uses context server', ->
-      entry = '2010-10-12 08:41:31\tINFO\tCatalina\t(127.0.0.1 ID:2 siteID:10 userID:101)\t Initialization processed in 422 ms'
-      ctx =
-        server: 'server2'
-        date: Date.now()
-        category:'cat'
-        codeSource:'codesrc'
-        clientInfo: 'ci'
-
-      expect(parse entry, ctx).toEqual [
-        server: ctx.server
-        date: new Date 2010, 10, 12, 8, 41, 31
-        category: 'INFO'
-        codeSource: 'Catalina'
-        clientInfo:
-          ip: '127.0.0.1'
-          id: '2'
-          siteid: '10'
-          userid: '101'
-        msg: 'Initialization processed in 422 ms'
-      ]
-     
     it 'parses Log Entry with NO clientInfo', ->
       entry = '2010-10-12 08:41:31\tINFO\tCatalina\t()\t Initialization processed in 422 ms'
       expect(parse entry).toEqual [

@@ -27,7 +27,6 @@ describe "LogWatcher", ->
     it "calls cb with array of lines", ->
       runs ->
         setTimeout (->
-          console.log "Test file:", file
           ws = fs.createWriteStream file, flags: 'a'
           ws.end "TEST DATA 1\nTEST DATA 2\n"
         ), 100

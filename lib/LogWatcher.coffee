@@ -23,7 +23,6 @@ module.exports =
             pos = prev.size
             size = cur.size - pos
 
-
             # Handle Log roll over (non-append)
             if size <= 0
               pos = 0

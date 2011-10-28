@@ -1,29 +1,40 @@
-{existsSync} = require 'path'
-{watchFile,read,open,statSync} = require 'fs'
+path = require 'path'
+fs = require 'fs'
 
-file = process.argv[2]
+module.exports =
 
-# File exists?
-if not existsSync(file) or not (prev = statSync(file)).isFile()
-  console.log "#{file} is NOT a file"
-
-else
-  open file, 'r', (err, fd)->
-    if err
-      console.log "Error opening file #{file}:", err
+  watch: (file, cb)->
+    # File exists?
+    if not path.existsSync(file) or not (prev = fs.statSync(file)).isFile()
+      console.log "#{file} is NOT a file"
 
     else
-      console.log "Watching: #{file}"
+      watcher = undefined
+      fs.open file, 'r', (err, fd)->
+        if err
+          console.log "Error opening file #{file}:", err
 
-      buf = new Buffer 8*1024
-      watchFile file, (cur,prev)->
-        pos = prev.size
-        size = cur.size - pos
+        else
+          console.log "Watching: #{file}"
 
-        # Handle Log roll over (non-append)
-        if size <= 0
-          pos = 0
-          size = cur.size
+          buf = new Buffer 128*1024
+          prevLine = ""
+          watcher = fs.watchFile file, (cur,prev)->
+            pos = prev.size
+            size = cur.size - pos
 
-        read fd, buf, 0, size, pos, (err,bytesRead,buffer)->
-          console.log buffer.slice(0, size).toString()
+
+            # Handle Log roll over (non-append)
+            if size <= 0
+              pos = 0
+              size = cur.size
+
+            fs.read fd, buf, 0, size, pos, (err,bytesRead,buffer)->
+              lines = buffer.slice(0, bytesRead).toString().split '\n'
+              oldPrevLine = prevLine
+              prevLine = lines.pop()
+              if lines?.length
+                lines[0] = oldPrevLine + lines[0]
+                cb undefined, lines
+
+      unwatch: -> fs.unwatchFile file

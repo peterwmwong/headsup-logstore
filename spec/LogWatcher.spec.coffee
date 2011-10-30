@@ -16,7 +16,6 @@ describe "LogWatcher", ->
 
   describe ".watch(file,cb)", ->
     file = undefined
-    fd = undefined
     received_err = []
     received = []
     watcher = undefined
@@ -25,23 +24,22 @@ describe "LogWatcher", ->
       file = path.resolve "#{process.env.TEMP or '/tmp'}/LogWatcher-spec-#{Date.now()}.txt"
       received_err = []
       received = []
-      fd = fs.openSync file, 'w'
+      fs.writeFileSync file, ''
       watcher = LogWatcher.watch file, (err, data)->
-        received_err.concat err
-        received = received.concat data
+        try received_err.concat err
+        try received = received.concat data
 
     afterEach ->
       try watcher?.unwatch()
-      try fs.closeSync fd
       try fs.unlinkSync file
-      file = fd = undefined
+      file = undefined
 
     it "calls cb with array of lines", ->
       runs ->
         setTimeout (->
           ws = fs.createWriteStream file, flags: 'a'
           ws.end "TEST DATA 1\nTEST DATA 2\n"
-        ), 100
+        ), 10
       waitsFor -> received.length >= 2
       runs ->
         expect(received_err).toEqual []
@@ -69,14 +67,16 @@ describe "LogWatcher", ->
 
     it "calls cb with array of lines, when file overwritten", ->
       runs ->
+
         setTimeout (->
           ws = fs.createWriteStream file, flags: 'a'
           ws.end "TEST DATA 1\nTEST DATA 2\n"
         ), 10
+
         setTimeout (->
-          ws = fs.createWriteStream file, flags: 'w'
-          ws.end "TEST DATA 6\nTEST DATA 7\n"
+          fs.writeFileSync file, "TEST DATA 6\nTEST DATA 7\n"
         ), 50
+
       waitsFor -> received.length >= 4
       runs ->
         expect(received_err).toEqual []
@@ -87,7 +87,23 @@ describe "LogWatcher", ->
           "TEST DATA 7"
         ]
 
-    it "stops watching when returned function (unwatch) is called", ->
+
+    it "stops watching when unwatch() is called right away", ->
+      done = false
+
+      runs ->
+        watcher.unwatch()
+        setTimeout (->
+          ws = fs.createWriteStream file, flags: 'a'
+          ws.end "TEST DATA 1\nTEST DATA 2\n"
+        ), 10
+        setTimeout (-> done = true), 50
+      waitsFor -> done
+      runs ->
+        expect(received_err).toEqual []
+        expect(received).toEqual []
+
+    it "stops watching when unwatch() is called", ->
       done = false
 
       runs ->

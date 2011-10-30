@@ -65,17 +65,25 @@ describe "LogWatcher", ->
           "TEST DATA 3"
         ]
 
-    it "calls cb with array of lines, when file overwritten", ->
+    it "[!!! Flaky on Linux: see TODO] calls cb with array of lines, when file overwritten", ->
       runs ->
-
         setTimeout (->
           ws = fs.createWriteStream file, flags: 'a'
           ws.end "TEST DATA 1\nTEST DATA 2\n"
         ), 10
 
         setTimeout (->
-          fs.writeFileSync file, "TEST DATA 6\nTEST DATA 7\n"
-        ), 50
+          #TODO:
+          # fs.createWriteStream for Windows...
+          # fs.writeFileSync for Linux...
+          # For some reason, using the wrong one (given your platform)
+          # causes double watch events to occur.
+
+          #FOR LINUX:
+          #fs.writeFileSync file, "TEST DATA 6\nTEST DATA 7\n"
+          ws = fs.createWriteStream file, flags: 'w'
+          ws.end "TEST DATA 6\nTEST DATA 7\n"
+        ), 1000
 
       waitsFor -> received.length >= 4
       runs ->

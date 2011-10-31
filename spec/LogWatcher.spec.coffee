@@ -1,136 +1,46 @@
-fs = require 'fs'
-path = require 'path'
+LogStore = require '../lib/LogStore'
 LogWatcher = require '../lib/LogWatcher'
-{isWindows,runUntil,notyet} = require './util/SpecHelpers'
+MockRedis = require './util/MockRedis'
+{isWindows,notyet,mocklog,runUntil} = require './util/SpecHelpers'
+redis = require 'redis'
+
+if isWindows() and (not process.env.TEST_REDIS_HOST or not process.env.TEST_REDIS_PORT)
+  throw "Windows: Cannot run LogStore.spec without an external redis-server host and port specified (TEST_REDIS_HOST, TEST_REDIS_PORT)"
 
 L = console.log.bind console
+DEFAULT_COUNT = 25
 
 describe "LogWatcher", ->
 
-  describe ".watch('BOGUSFILE',cb)", ->
-    it "calls cb with error", ->
-      runUntil (done)->
-        LogWatcher.watch "bOgUsFiLe.bogus", (err)->
-          expect(err).toBe "bOgUsFiLe.bogus is NOT a file"
-          done()
+  describe "given bad config or arguments", ->
+    it "exits with error when ./headsup-config.json does NOT exist", notyet
+    it "exits with error when ./headsup-config.json is not JSON parseable", notyet
+    it "exits with error when redis_host and/or redis_port are NOT specified in headsup-config.json", notyet
+    it "exits with error when NO log file is specified", notyet
 
-  describe ".watch(file,cb)", ->
-    file = undefined
-    received_err = []
-    received = []
-    watcher = undefined
+  describe "given proper config and arguments", ->
+    db = null
+    mockRedis = null
+    curdbid = 0
 
     beforeEach ->
-      file = path.resolve "#{process.env.TEMP or '/tmp'}/LogWatcher-spec-#{Date.now()}.txt"
-      received_err = []
-      received = []
-      fs.writeFileSync file, ''
-      watcher = LogWatcher.watch file, (err, data)->
-        try received_err.concat err
-        try received = received.concat data
+      runUntil (done)->
+        if not db or not mockRedis
+          new MockRedis (mr)->
+            mockRedis = mr
+            db = redis.createClient mockRedis.port, mockRedis.port
+            done()
+        else done()
+      runUntil (done)->
+        db.select curdbid
+        done()
 
-    afterEach ->
-      try watcher?.unwatch()
-      try fs.unlinkSync file
-      file = undefined
+    it "publishes log entries when ./serverlog.txt is written to", notyet
 
-    it "calls cb with array of lines", ->
-      runs ->
-        setTimeout (->
-          ws = fs.createWriteStream file, flags: 'a'
-          ws.end "TEST DATA 1\nTEST DATA 2\n"
-        ), 10
-      waitsFor -> received.length >= 2
-      runs ->
-        expect(received_err).toEqual []
-        expect(received).toEqual [
-          "TEST DATA 1"
-          "TEST DATA 2"
-        ]
-
-    it "assembles lines on newline, even when received chunks split lines.", ->
-      runs =>
-        ws = fs.createWriteStream file, flags: 'a'
-        @after -> try ws?.writable and ws?.end()
-
-        setTimeout (-> ws.write "TEST DATA 1\nTEST D"), 10
-        setTimeout (-> ws.write "ATA 2\nTEST D"), 50
-        setTimeout (-> ws.end "ATA 3\n" ), 100
-      waitsFor -> received.length >= 3
-      runs ->
-        expect(received_err).toEqual []
-        expect(received).toEqual [
-          "TEST DATA 1"
-          "TEST DATA 2"
-          "TEST DATA 3"
-        ]
-
-    it "calls cb with array of lines, when file overwritten [!!! FLAKY: see TODO and https://github.com/joyent/node/issues/1970]", ->
-      runs ->
-        setTimeout (->
-          ws = fs.createWriteStream file, flags: 'a'
-          ws.end "TEST DATA 1\nTEST DATA 2\n"
-        ), 10
-
-        setTimeout (->
-          #TODO:
-          # fs.createWriteStream for Windows...
-          # fs.writeFileSync for Linux...
-          # For some reason, using the wrong one (given your platform)
-          # causes double watch events to occur.
-          if isWindows()
-            ws = fs.createWriteStream file, flags: 'w'
-            ws.end "TEST DATA 6\nTEST DATA 7\n"
-          else
-            fs.writeFileSync file, "TEST DATA 6\nTEST DATA 7\n"
-        ), 1000
-
-      waitsFor -> received.length >= 4
-      runs ->
-        expect(received_err).toEqual []
-        expect(received).toEqual [
-          "TEST DATA 1"
-          "TEST DATA 2"
-          "TEST DATA 6"
-          "TEST DATA 7"
-        ]
-
-    it "stops watching when unwatch() is called right away", ->
-      done = false
-
-      runs ->
-        watcher.unwatch()
-        setTimeout (->
-          ws = fs.createWriteStream file, flags: 'a'
-          ws.end "TEST DATA 1\nTEST DATA 2\n"
-        ), 10
-        setTimeout (-> done = true), 50
-      waitsFor -> done
-      runs ->
-        expect(received_err).toEqual []
-        expect(received).toEqual []
-
-    it "stops watching when unwatch() is called", ->
-      done = false
-
-      runs ->
-        setTimeout (->
-          ws = fs.createWriteStream file, flags: 'a'
-          ws.end "TEST DATA 1\nTEST DATA 2\n"
-        ), 10
-        setTimeout (->
-          watcher.unwatch()
-          watcher = undefined
-        ), 50
-        setTimeout (->
-          ws = fs.createWriteStream file, flags: 'w'
-          ws.end "TEST DATA 6\nTEST DATA 7\n"
-          done = true
-        ), 100
-      waitsFor -> done
-      runs ->
-        expect(received_err).toEqual []
-        expect(received).toEqual [
-          "TEST DATA 1"
-          "TEST DATA 2"
-        ]
+    it "MOCK REDIS TEARDOWN", ->
+      if db
+        db.flushall()
+        db.end()
+      mockRedis?.shutdown()
+      runUntil (done)-> setTimeout done, 100
+    

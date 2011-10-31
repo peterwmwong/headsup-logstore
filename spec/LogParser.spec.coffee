@@ -2,7 +2,7 @@
 
 describe 'LogParser', ->
 
-  describe 'parse()', ->
+  describe '.parse()', ->
 
     it 'parses message only Log Entry', ->
       msg = '123 1241 sdflksd 87324 sk !@%!@%'

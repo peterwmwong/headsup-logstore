@@ -1,6 +1,6 @@
 LogStore = require '../lib/LogStore'
 LogPublisher = require '../lib/LogPublisher'
-{createServer} = require './util/redis-remote'
+MockRedis = require './util/MockRedis'
 {isWindows,mocklog,runUntil,toHash} = require './util/SpecHelpers'
 redis = require 'redis'
 
@@ -13,40 +13,27 @@ describe "LogPublisher", ->
   context = 'test'
   lp = null
   db = null
-  redishost = null
-  redisport = null
-  dbmgr = null
+  mockRedis = null
   curdbid = 0
 
   beforeEach ->
-    if not db
-      # Windows/Redis on remote machine
-      if process.env.TEST_REDIS_HOST and process.env.TEST_REDIS_PORT
-        redishost = process.env.TEST_REDIS_HOST
-        redisport = process.env.TEST_REDIS_PORT
-        db = redis.createClient redisport, redishost
-
-      # Linux: use redis-remote to start and down
-      else
-        redishost = '127.0.0.1'
-        runUntil (done)->
-          createServer ((err,mock)->
-            dbmgr = mock
-            redisport = dbmgr.port
-            db = redis.createClient redisport, redishost
-            lp = new LogPublisher context: context, host:redishost, port: redisport
-            done()
-          ), 100
-    else
-      db.select ++curdbid
-      lp = new LogPublisher context: context, host:redishost, port:redisport, dbid: curdbid
+    runUntil (done)->
+      if not db or not mockRedis
+        new MockRedis (mr)->
+          mockRedis = mr
+          db = redis.createClient mockRedis.port, mockRedis.port
+          done()
+      else done()
+    runs ->
+      lp = new LogPublisher context: context, host:mockRedis.host, port: mockRedis.port, dbid: ++curdbid
+      db.select curdbid
 
   afterEach -> lp?.end()
 
-  describe "new LogParser()", ->
+  describe "new LogPublisher()", ->
     it 'throws an error when no @context is given', ->
       expect( ->
-        new LogPublisher port:redishost, dbid: redisport, dbid: curdbid
+        new LogPublisher port:mockRedis.port, host:mockRedis.host, dbid: curdbid
       ).toThrow 'No @context was supplied.'
 
   describe ".log([], callback)", ->
@@ -60,7 +47,7 @@ describe "LogPublisher", ->
 
     it 'publishes logs', ->
       received = undefined
-      client = redis.createClient redisport, redishost
+      client = redis.createClient mockRedis.port, mockRedis.host
       client.on 'message', (chan,msg)->
         received =
           channel: chan
@@ -141,7 +128,7 @@ describe "LogPublisher", ->
 
   describe "._saltDate(date)", ->
 
-    it "date * 1000 + salt", -> expect(lp._saltDate 1).toBe 1000
+    it "returns date * 1000 + salt", -> expect(lp._saltDate 1).toBe 1000
 
     it "increments salt, when date is same as previous 'salted' date", ->
       lp._saltDate 1
@@ -157,9 +144,10 @@ describe "LogPublisher", ->
       expect(lp._saltDate 3).toBe 3000
 
 
-  it 'TEST TEARDOWN', ->
-    db.flushall()
-    db.end()
-    dbmgr?.stop()
-    lp.end()
+  it "MOCK REDIS TEARDOWN", ->
+    if db
+      db.flushall()
+      db.end()
+    mockRedis?.shutdown()
+    lp?.end()
     runUntil (done)-> setTimeout done, 100

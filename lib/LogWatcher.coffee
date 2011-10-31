@@ -17,7 +17,7 @@ module.exports =
           if not unwatch
             prevLine = ""
             watcher = fs.watch file, (ev,fname)->
-              if not unwatch and ev is 'change'
+              if fname and not unwatch and ev is 'change'
                 fs.stat file, (err,cur)-> if err then cb err else
                   pos = prev.size
                   size = cur.size - pos

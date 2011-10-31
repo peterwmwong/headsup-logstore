@@ -1,8 +1,11 @@
 LogStore = require '../lib/LogStore'
 LogPublisher = require '../lib/LogPublisher'
 {createServer} = require './util/redis-remote'
-{notyet,mocklog,runUntil} = require './util/SpecHelpers'
+{isWindows, notyet,mocklog,runUntil} = require './util/SpecHelpers'
 redis = require 'redis'
+
+if isWindows() and (not process.env.TEST_REDIS_HOST or not process.env.TEST_REDIS_PORT)
+  throw "Windows: Cannot run LogStore.spec without an external redis-server host and port specified (TEST_REDIS_HOST, TEST_REDIS_PORT)"
 
 L = console.log.bind console
 DEFAULT_COUNT = 25
@@ -10,23 +13,36 @@ DEFAULT_COUNT = 25
 describe "LogStore", ->
   ls = null
   db = null
+  redishost = null
+  redisport = null
   dbmgr = null
   curdbid = 0
 
   beforeEach ->
-    if not dbmgr?
-      runUntil (done)->
-        createServer ((err,mock)->
-          dbmgr = mock
-          db = redis.createClient dbmgr.port
-          ls = new LogStore host:'127.0.0.1', port: dbmgr.port
-          done()
-        ), 100
+    if not db
+      # Windows/Redis on remote machine
+      if process.env.TEST_REDIS_HOST and process.env.TEST_REDIS_PORT
+        redishost = process.env.TEST_REDIS_HOST
+        redisport = process.env.TEST_REDIS_PORT
+        db = redis.createClient redisport, redishost
+        ls = new LogStore host:redishost, port: redisport
+
+      # Linux: use redis-remote to start and down
+      else
+        redishost = '127.0.0.1'
+        runUntil (done)->
+          createServer ((err,mock)->
+            dbmgr = mock
+            redisport = dbmgr.port
+            db = redis.createClient redisport, redishost
+            ls = new LogStore host:redishost, port: redisport
+            done()
+          ), 100
     else
       db.select ++curdbid
-      ls = new LogStore host:'127.0.0.1', port: dbmgr.port, dbid: curdbid
+      ls = new LogStore host:redishost, port:redisport, dbid: curdbid
 
-  afterEach -> ls.end()
+  afterEach -> ls?.end()
 
 
   describe ".end()", ->
@@ -38,8 +54,8 @@ describe "LogStore", ->
 
   describe ".on('log', callback)", ->
     it 'when log, calls callback', ->
-      lp = new LogPublisher context:'test', host: '127.0.0.1', port:dbmgr.port, dbid: curdbid
-      logstores = for i in [0...3] then new LogStore host: '127.0.0.1', port:dbmgr.port, dbid: curdbid
+      lp = new LogPublisher context:'test', host:redishost, port:redisport, dbid: curdbid
+      logstores = for i in [0...3] then new LogStore host:redishost, port:redisport, dbid: curdbid
       @after -> for logstore in [lp, logstores...] then logstore.end()
 
       mlogs = [mocklog()]
@@ -57,7 +73,7 @@ describe "LogStore", ->
     mlogs = null
 
     it "returns last #{DEFAULT_COUNT} log entries", ->
-      lp = new LogPublisher context:'test', host: '127.0.0.1', port:dbmgr.port, dbid: curdbid
+      lp = new LogPublisher context:'test', host:redishost, port:redisport, dbid: curdbid
       @after -> lp.end()
       mlogs = (mocklog(date: Date.now()+1000*i) for i in [0..DEFAULT_COUNT+5])
 
@@ -68,7 +84,7 @@ describe "LogStore", ->
       runs -> expect(received).toEqual mlogs.reverse().slice(0,DEFAULT_COUNT)
 
     it "returns last X log entries, if X < #{DEFAULT_COUNT}", ->
-      lp = new LogPublisher context:'test', host: '127.0.0.1', port:dbmgr.port, dbid: curdbid
+      lp = new LogPublisher context:'test', host:redishost, port:redisport, dbid: curdbid
       @after -> lp.end()
       mlogs = (mocklog(date: Date.now()+1000*i) for i in [0...3])
 
@@ -82,8 +98,8 @@ describe "LogStore", ->
   describe ".get({filterBy: {context}})", ->
 
     it "returns last #{DEFAULT_COUNT} log entries, from specified context", ->
-      lpOne = new LogPublisher context:'one', host: '127.0.0.1', port:dbmgr.port, dbid: curdbid
-      lpTwo = new LogPublisher context:'two', host: '127.0.0.1', port:dbmgr.port, dbid: curdbid
+      lpOne = new LogPublisher context:'one', host:redishost, port:redisport, dbid: curdbid
+      lpTwo = new LogPublisher context:'two', host:redishost, port:redisport, dbid: curdbid
       @after -> lp.end() for lp in [lpOne, lpTwo]
       oneLogs = (mocklog {category: 'oneCat', date: Date.now()+1000*i} for i in [0...1])
       twoLogs = (mocklog {category: 'twoCat', date: Date.now()+1000*i} for i in [0...1])
@@ -105,7 +121,7 @@ describe "LogStore", ->
     mlogs = undefined
 
     beforeEach ->
-      lp = new LogPublisher context:'test', host: '127.0.0.1', port:dbmgr.port, dbid: curdbid
+      lp = new LogPublisher context:'test', host:redishost, port:redisport, dbid: curdbid
       @after -> lp.end()
       mlogs = (mocklog {date: Date.now()+1000*i} for i in [0...5])
       mlogs[0].clientInfo = ip: '1'
@@ -136,7 +152,7 @@ describe "LogStore", ->
     mlogs = undefined
 
     beforeEach ->
-      lp = new LogPublisher context:'test', host: '127.0.0.1', port:dbmgr.port, dbid: curdbid
+      lp = new LogPublisher context:'test', host:redishost, port:redisport, dbid: curdbid
       @after -> lp.end()
       mlogs = (mocklog(date: Date.now()+1000*i) for i in [0...5])
       runUntil (done)-> lp.log mlogs, done
@@ -179,7 +195,8 @@ describe "LogStore", ->
 
 
   it 'TEST TEARDOWN', ->
+    db.flushall()
     db.end()
-    dbmgr.stop()
-    ls.end()
+    dbmgr?.stop()
+    ls?.end()
     runUntil (done)-> setTimeout done, 100

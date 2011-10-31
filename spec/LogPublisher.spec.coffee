@@ -1,8 +1,11 @@
 LogStore = require '../lib/LogStore'
 LogPublisher = require '../lib/LogPublisher'
 {createServer} = require './util/redis-remote'
-{mocklog,runUntil,toHash} = require './util/SpecHelpers'
+{isWindows,mocklog,runUntil,toHash} = require './util/SpecHelpers'
 redis = require 'redis'
+
+if isWindows() and (not process.env.TEST_REDIS_HOST or not process.env.TEST_REDIS_PORT)
+  throw "Windows: Cannot run LogStore.spec without an external redis-server host and port specified (TEST_REDIS_HOST, TEST_REDIS_PORT)"
 
 L = console.log.bind console
 
@@ -10,28 +13,40 @@ describe "LogPublisher", ->
   context = 'test'
   lp = null
   db = null
+  redishost = null
+  redisport = null
   dbmgr = null
   curdbid = 0
 
   beforeEach ->
-    if not dbmgr?
-      runUntil (done)->
-        createServer ((err,mock)->
-          dbmgr = mock
-          db = redis.createClient dbmgr.port
-          lp = new LogPublisher context: context, host:'127.0.0.1', port: dbmgr.port
-          done()
-        ), 100
+    if not db
+      # Windows/Redis on remote machine
+      if process.env.TEST_REDIS_HOST and process.env.TEST_REDIS_PORT
+        redishost = process.env.TEST_REDIS_HOST
+        redisport = process.env.TEST_REDIS_PORT
+        db = redis.createClient redisport, redishost
+
+      # Linux: use redis-remote to start and down
+      else
+        redishost = '127.0.0.1'
+        runUntil (done)->
+          createServer ((err,mock)->
+            dbmgr = mock
+            redisport = dbmgr.port
+            db = redis.createClient redisport, redishost
+            lp = new LogPublisher context: context, host:redishost, port: redisport
+            done()
+          ), 100
     else
       db.select ++curdbid
-      lp = new LogPublisher context: context, host:'127.0.0.1', port: dbmgr.port, dbid: curdbid
+      lp = new LogPublisher context: context, host:redishost, port:redisport, dbid: curdbid
 
-  afterEach -> lp.end()
+  afterEach -> lp?.end()
 
   describe "new LogParser()", ->
     it 'throws an error when no @context is given', ->
       expect( ->
-        new LogPublisher host:'127.0.0.1', port: dbmgr.port, dbid: curdbid
+        new LogPublisher port:redishost, dbid: redisport, dbid: curdbid
       ).toThrow 'No @context was supplied.'
 
   describe ".log([], callback)", ->
@@ -45,7 +60,7 @@ describe "LogPublisher", ->
 
     it 'publishes logs', ->
       received = undefined
-      client = redis.createClient()
+      client = redis.createClient redisport, redishost
       client.on 'message', (chan,msg)->
         received =
           channel: chan
@@ -143,7 +158,8 @@ describe "LogPublisher", ->
 
 
   it 'TEST TEARDOWN', ->
+    db.flushall()
     db.end()
-    dbmgr.stop()
+    dbmgr?.stop()
     lp.end()
     runUntil (done)-> setTimeout done, 100

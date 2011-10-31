@@ -7,7 +7,7 @@ Getting Started
 
 ### [Install node.js and NPM](https://github.com/joyent/node/wiki/Installation)
 
-### [Install redis](http://redis.io/download)
+### Linux only: [Install redis](http://redis.io/download)
 
 - **Make sure to add redis/src to PATH, so redis-server is a command.**
 
@@ -18,7 +18,18 @@ Getting Started
 
 ### Run specs
 
+#### Linux
+
     > make spec
+
+#### Windows
+
+Currently, redis does not support Windows.
+An external test redis server must be used by the specs.
+
+    > set TEST_REDIS_HOST=<Host of redis server>
+    > set TEST_REDIS_PORT=<Port of redis server>
+    > node_modules\.bin\jasmine-node.cmd --coffee spec\
 
 
 Credit

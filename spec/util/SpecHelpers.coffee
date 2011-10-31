@@ -1,5 +1,7 @@
+os = require 'os'
 randint = (max)-> Math.ceil Math.random()*max
 module.exports =
+  isWindows: -> not not /^Windows/.exec os.type()
   notyet: -> @fail '>> Not implemented yet <<'
   mocklog: (overrides)->
     {date,category,codeSource,clientInfo} = overrides or {}

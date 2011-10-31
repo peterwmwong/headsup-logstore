@@ -65,7 +65,7 @@ describe "LogWatcher", ->
           "TEST DATA 3"
         ]
 
-    it "[!!! Flaky on Linux: see TODO] calls cb with array of lines, when file overwritten", ->
+    it "[!!! Bad on Windows: see TODO and https://github.com/joyent/node/issues/1970] calls cb with array of lines, when file overwritten", ->
       runs ->
         setTimeout (->
           ws = fs.createWriteStream file, flags: 'a'
@@ -94,7 +94,6 @@ describe "LogWatcher", ->
           "TEST DATA 6"
           "TEST DATA 7"
         ]
-
 
     it "stops watching when unwatch() is called right away", ->
       done = false

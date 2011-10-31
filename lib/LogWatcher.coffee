@@ -16,6 +16,7 @@ module.exports =
         fs.stat file, (err,prev)-> if err then cb err else
           if not unwatch
             prevLine = ""
+            buf = new Buffer 128*1024
             watcher = fs.watch file, (ev,fname)->
               if fname and not unwatch and ev is 'change'
                 fs.stat file, (err,cur)-> if err then cb err else
@@ -29,7 +30,7 @@ module.exports =
 
                   prev = cur
 
-                  fs.read fd, new Buffer(128*1024), 0, size, pos, (err,bytesRead,buffer)-> if err then cb err else
+                  fs.read fd, buf, 0, size, pos, (err,bytesRead,buffer)-> if err then cb err else
                     lines = buffer.slice(0, bytesRead).toString().split '\n'
                     oldPrevLine = prevLine
                     prevLine = lines.pop()

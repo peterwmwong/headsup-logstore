@@ -1,7 +1,7 @@
 fs = require 'fs'
 path = require 'path'
 LogWatcher = require '../lib/LogWatcher'
-{runUntil,notyet} = require './util/SpecHelpers'
+{isWindows,runUntil,notyet} = require './util/SpecHelpers'
 
 L = console.log.bind console
 
@@ -65,7 +65,7 @@ describe "LogWatcher", ->
           "TEST DATA 3"
         ]
 
-    it "[!!! Bad on Windows: see TODO and https://github.com/joyent/node/issues/1970] calls cb with array of lines, when file overwritten", ->
+    it "calls cb with array of lines, when file overwritten [!!! FLAKY: see TODO and https://github.com/joyent/node/issues/1970]", ->
       runs ->
         setTimeout (->
           ws = fs.createWriteStream file, flags: 'a'
@@ -78,11 +78,11 @@ describe "LogWatcher", ->
           # fs.writeFileSync for Linux...
           # For some reason, using the wrong one (given your platform)
           # causes double watch events to occur.
-
-          #FOR LINUX:
-          #fs.writeFileSync file, "TEST DATA 6\nTEST DATA 7\n"
-          ws = fs.createWriteStream file, flags: 'w'
-          ws.end "TEST DATA 6\nTEST DATA 7\n"
+          if isWindows()
+            ws = fs.createWriteStream file, flags: 'w'
+            ws.end "TEST DATA 6\nTEST DATA 7\n"
+          else
+            fs.writeFileSync file, "TEST DATA 6\nTEST DATA 7\n"
         ), 1000
 
       waitsFor -> received.length >= 4

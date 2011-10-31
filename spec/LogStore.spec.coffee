@@ -21,7 +21,7 @@ describe "LogStore", ->
       if not db or not mockRedis
         new MockRedis (mr)->
           mockRedis = mr
-          db = redis.createClient mockRedis.port, mockRedis.port
+          db = redis.createClient mockRedis.port, mockRedis.host
           done()
       else done()
     runs ->

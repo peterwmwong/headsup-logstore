@@ -18,7 +18,7 @@ describe "LogWatcher", ->
 
   beforeEach ->
     dir = path.resolve "#{process.env.TEMP or '/tmp'}/LogWatcher-#{Date.now()}"
-    runUntil (done)-> fs.mkdir dir, "0666", done
+    runUntil (done)-> fs.mkdir dir, "0777", done
 
   afterEach -> runUntil (done)-> fs.rmdir dir, done
 
@@ -84,7 +84,7 @@ describe "LogWatcher", ->
 
       runUntil (done)->
         dir = path.resolve "#{process.env.TEMP or '/tmp'}/LogWatcher-#{Date.now()}"
-        fs.mkdir dir, "0666", done
+        fs.mkdir dir, "0777", done
       runUntil (done)->
         if not db or not mockRedis
           new MockRedis (mr)->

@@ -4,9 +4,6 @@ MockRedis = require './util/MockRedis'
 {isWindows,mocklog,runUntil,toHash} = require './util/SpecHelpers'
 redis = require 'redis'
 
-if isWindows() and (not process.env.TEST_REDIS_HOST or not process.env.TEST_REDIS_PORT)
-  throw "Windows: Cannot run LogStore.spec without an external redis-server host and port specified (TEST_REDIS_HOST, TEST_REDIS_PORT)"
-
 L = console.log.bind console
 
 describe "LogPublisher", ->
@@ -15,8 +12,10 @@ describe "LogPublisher", ->
   db = null
   mockRedis = null
   curdbid = 0
+  onConnectArgs = undefined
 
   beforeEach ->
+    onConnectArgs = undefined
     runUntil (done)->
       if not db or not mockRedis
         new MockRedis (mr)->
@@ -25,7 +24,12 @@ describe "LogPublisher", ->
           done()
       else done()
     runs ->
-      lp = new LogPublisher context: context, host:mockRedis.host, port: mockRedis.port, dbid: ++curdbid
+      lp = new LogPublisher
+        context: context
+        host: mockRedis.host
+        port: mockRedis.port
+        dbid: ++curdbid
+        onConnect: (err)-> onConnectArgs = [err]
       db.select curdbid
 
   afterEach -> lp?.end()
@@ -35,6 +39,25 @@ describe "LogPublisher", ->
       expect( ->
         new LogPublisher port:mockRedis.port, host:mockRedis.host, dbid: curdbid
       ).toThrow 'No @context was supplied.'
+
+    it 'calls onConnect with error when unable to make connection', ->
+      lp2 = null
+      @after -> lp2?.end()
+      runUntil (done)->
+        lp2 = new LogPublisher
+          context: context
+          port: 7
+          host: '127.127.127.127'
+          dbid: curdbid
+          onConnect: (err)->
+            expect(err).toBe "Could not connect to 127.127.127.127:7"
+            done()
+
+    it 'calls onConnect with no errors', ->
+      waitsFor -> onConnectArgs
+      runUntil (done)->
+        expect(onConnectArgs).toEqual [undefined]
+        done()
 
   describe ".log([], callback)", ->
 
@@ -108,6 +131,7 @@ describe "LogPublisher", ->
 
     it "hashes full Log Entry", ->
       expect(lp._toHash(l = mocklog())).toEqual
+        msg: l.msg
         date: l.date
         category: l.category
         codeSource: l.codeSource
@@ -121,6 +145,7 @@ describe "LogPublisher", ->
       l = mocklog()
       delete l.clientInfo
       expect(lp._toHash(l)).toEqual
+        msg: l.msg
         date: l.date
         category: l.category
         codeSource: l.codeSource

@@ -2,12 +2,24 @@
 {EventEmitter} = require 'events'
 redis = require 'redis'
 
-LogPublisher = ({@context,port,host,dbid})->
+LogPublisher = ({@context,port,host,dbid,onConnect})->
   if not @context? then throw 'No @context was supplied.'
+  if typeof onConnect isnt 'function'
+    onConnect = undefined
 
   for conn in ['_db','_pub']
-    @[conn] = redis.createClient port, host
-    @[conn].select dbid if dbid
+    c = @[conn] = redis.createClient port, host
+    c.retry_delay = 750
+    c.select dbid if dbid
+    if onConnect
+      c.once 'error', ->
+        if oc = onConnect
+          onConnect = undefined
+          try oc? "Could not connect to #{host}:#{port}"
+      c.once 'ready', ->
+        if oc = onConnect
+          onConnect = undefined
+          try oc()
 
   # Salting a date prevents equal scores of log entries of the same date
   # (log entries on the same millisecond)
@@ -22,12 +34,12 @@ LogPublisher = ({@context,port,host,dbid})->
 
   this
 
-LogPublisher::[k]=v for k,v of do->
-
+LogPublisher.prototype =
   end: ->
+    @_disconnected = true
     for conn in ['_db','_pub']
-      @[conn]?.end()
-      delete @[conn]
+      @[conn].end()
+      @[conn].removeAllListeners 'error'
 
   log: (entries,cb=->)->
     if @_checkConn cb
@@ -63,9 +75,8 @@ LogPublisher::[k]=v for k,v of do->
               if numFailed or dbError then cb {numFailed,dbError}
               else cb()
 
-
   _checkConn: (cb)->
-    if not @_db?
+    if @_disconnected
       cb "Connection closed"
       false
     else
@@ -76,6 +87,7 @@ LogPublisher::[k]=v for k,v of do->
       date: e.date
       category: e.category
       codeSource: e.codeSource
+      msg: e.msg
 
     if ci = e.clientInfo
       hash.ci_ip = ci.ip if ci.ip

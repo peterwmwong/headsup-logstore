@@ -6,14 +6,15 @@ module.exports =
   mocklog: (overrides)->
     {date,category,codeSource,clientInfo} = overrides or {}
     {ip,id,siteid,userid} = clientInfo or {}
+    msg: "Random msg #{randint 256}"
     date: date or Date.now()
     category: category or "MOCK#{randint 10}"
     codeSource: codeSource or 'mockCodeSource'
     clientInfo:
       ip: ip or "172.16.18.#{randint 256}"
-      id: id or randint 10
-      siteid: siteid or randint 256
-      userid: userid or randint 256
+      id: id or "#{randint 10}"
+      siteid: siteid or "#{randint 256}"
+      userid: userid or "#{randint 256}"
 
   runUntil: (cb)->
     isdone = false
@@ -23,6 +24,7 @@ module.exports =
 
   toHash: (l,logid)->
     logid: logid.toString()
+    msg: l.msg
     date: l.date.toString()
     category: l.category
     codeSource: l.codeSource

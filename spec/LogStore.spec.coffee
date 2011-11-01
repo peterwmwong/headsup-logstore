@@ -160,6 +160,7 @@ describe "LogStore", ->
     it "converts hash to Log Entry", ->
       l = mocklog()
       hash = 
+        msg: l.msg
         date: l.date
         category: l.category
         codeSource: l.codeSource
@@ -173,6 +174,7 @@ describe "LogStore", ->
       l = mocklog()
       delete l.clientInfo
       hash = 
+        msg: l.msg
         date: l.date
         category: l.category
         codeSource: l.codeSource

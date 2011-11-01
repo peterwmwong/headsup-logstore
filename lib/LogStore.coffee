@@ -68,6 +68,7 @@ LogStore::[k]=v for k,v of do->
 
   _toLog: (e)->
     rtn =
+      msg: e.msg
       date: Number e.date
       category: e.category
       codeSource: e.codeSource
@@ -75,9 +76,9 @@ LogStore::[k]=v for k,v of do->
     if e.ci_ip or e.ci_id or e.ci_siteid or e.ci_userid
       ci = {}
       ci.ip = e.ci_ip if e.ci_ip
-      ci.id = Number e.ci_id if e.ci_id
-      ci.siteid = Number e.ci_siteid if e.ci_siteid
-      ci.userid = Number e.ci_userid if e.ci_userid
+      ci.id = e.ci_id
+      ci.siteid = e.ci_siteid
+      ci.userid = e.ci_userid
       rtn.clientInfo = ci
     rtn
 

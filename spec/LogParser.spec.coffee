@@ -27,7 +27,7 @@ describe 'LogParser', ->
     it 'parses full Log Entry', ->
       entry = '2010-10-12 08:41:31\tINFO\tCatalina\t(127.0.0.1 ID:2 siteID:10 userID:101)\t Initialization processed in 422 ms'
       expect(parse entry).toEqual [
-        date: new Date 2010, 10, 12, 8, 41, 31
+        date: new Date(2010, 10, 12, 8, 41, 31).getTime()
         category: 'INFO'
         codeSource: 'Catalina'
         clientInfo:
@@ -41,7 +41,7 @@ describe 'LogParser', ->
     it 'parses Log Entry with NO clientInfo', ->
       entry = '2010-10-12 08:41:31\tINFO\tCatalina\t()\t Initialization processed in 422 ms'
       expect(parse entry).toEqual [
-        date: new Date 2010, 10, 12, 8, 41, 31
+        date: new Date(2010, 10, 12, 8, 41, 31).getTime()
         category: 'INFO'
         codeSource: 'Catalina'
         msg: 'Initialization processed in 422 ms'
@@ -59,7 +59,7 @@ describe 'LogParser', ->
 
       expect(parse entries).toEqual do->
         for i in [0...5] then do->
-          date: new Date 2010, 10, 12, 8, 41, 30+i
+          date: new Date(2010, 10, 12, 8, 41, 30+i).getTime()
           category: "INFO#{i}"
           codeSource: "Catalina#{i}"
           clientInfo:
@@ -80,7 +80,7 @@ describe 'LogParser', ->
         """
       expect(parse entries).toEqual [
         { 
-          date: new Date 2010, 10, 12, 8, 41, 30
+          date: new Date(2010, 10, 12, 8, 41, 30).getTime()
           category: 'INFO1'
           codeSource: 'Catalina1'
           clientInfo:
@@ -90,7 +90,7 @@ describe 'LogParser', ->
             userid: '101'
           msg: "Initialization processed in 421 ms" }
         { 
-          date: new Date 2010, 10, 12, 8, 41, 30
+          date: new Date(2010, 10, 12, 8, 41, 30).getTime()
           category: 'INFO1'
           codeSource: 'Catalina1'
           clientInfo:
@@ -100,7 +100,7 @@ describe 'LogParser', ->
             userid: '101'
           msg: "Blarg1" }
         { 
-          date: new Date 2010, 10, 12, 8, 41, 31
+          date: new Date(2010, 10, 12, 8, 41, 31).getTime()
           category: 'INFO2'
           codeSource: 'Catalina2'
           clientInfo:
@@ -110,7 +110,7 @@ describe 'LogParser', ->
             userid: '102'
           msg: "Initialization processed in 422 ms" }
         { 
-          date: new Date 2010, 10, 12, 8, 41, 31
+          date: new Date(2010, 10, 12, 8, 41, 31).getTime()
           category: 'INFO2'
           codeSource: 'Catalina2'
           clientInfo:
@@ -120,7 +120,7 @@ describe 'LogParser', ->
             userid: '102'
           msg: "Blarg2" }
         {
-          date: new Date 2010, 10, 12, 8, 41, 31
+          date: new Date(2010, 10, 12, 8, 41, 31).getTime()
           category: 'INFO2'
           codeSource: 'Catalina2'
           clientInfo:

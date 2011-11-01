@@ -15,7 +15,7 @@ module.exports =
     for line in lines.split('\n') when line = line.trim()
       if p = leregex.exec line
         ctx =
-          date: new Date p[1], p[2], p[3], p[4], p[5], p[6], 0
+          date: new Date(p[1], p[2], p[3], p[4], p[5], p[6], 0).getTime()
           category: p[7]
           codeSource: p[8]
           clientInfo: parseClientInfo p[9]

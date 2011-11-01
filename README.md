@@ -31,12 +31,25 @@ An external test redis server must be used by the specs.
     > set TEST_REDIS_PORT=<Port of redis server>
     > node_modules\.bin\jasmine-node.cmd --coffee spec\
 
+### Debugging specs
+
+[Node cli debugger](http://nodejs.org/docs/v0.5.10/api/debugger.html)
+
+    > node debug node_modules\jasmine-node\lib\jasmine-node\cli.js --coffee spec\LogStore.spec.coffee
+
+[node-inspector](https://github.com/dannycoates/node-inspector)
+
+    > npm install node-inspector
+    > node-inspector &
+    > node --debug node_modules\jasmine-node\lib\jasmine-node\cli.js --coffee spec\LogStore.spec.coffee
 
 Credit
 ------
 
 * [CoffeeScript](http://jashkenas.github.com/coffee-script/) - Better than JavaScript
-* [Redis](http://redis.io/) - Key-Value Store
+* [Node](http://nodejs.org/) - Awesome <EOM>
 * [Node Redis](https://github.com/mranney/node_redis) - Redis client for Node.js
+* [npm](http://npmjs.org/) - Node Package Manager
 * [Jasmine](http://pivotal.github.com/jasmine/) - BDD for JavaScript
 * [Jasmine-Node](http://jquery.com/) - Jasmine Node.js integration
+* [Redis](http://redis.io/) - Key-Value Store

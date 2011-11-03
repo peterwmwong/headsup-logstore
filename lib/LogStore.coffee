@@ -11,7 +11,6 @@ LogStore = (opts)->
 
   @_sub.on 'message', (chan,msg)=> @emit 'log', JSON.parse msg
   @_sub.subscribe 'log'
-  @_
 
   this
 
@@ -26,7 +25,8 @@ LogStore::[k]=v for k,v of do->
       delete @[conn]
 
   get: ({filterBy,limit,start},cb)->
-    if @_checkConn cb
+    if not @_db then cb "Connection closed"
+    else
       if start?
         @_db.zrevrank "all", start, (err,rank)=>
           if err then cb err
@@ -59,13 +59,6 @@ LogStore::[k]=v for k,v of do->
               for log,i in logs then logs[i] = @_toLog log
               cb undefined, logs
 
-  _checkConn: (cb)->
-    if not @_db?
-      cb "Connection closed"
-      false
-    else
-      true
-
   _toLog: (e)->
     rtn =
       msg: e.msg
@@ -74,12 +67,11 @@ LogStore::[k]=v for k,v of do->
       codeSource: e.codeSource
 
     if e.ci_ip or e.ci_id or e.ci_siteid or e.ci_userid
-      ci = {}
-      ci.ip = e.ci_ip if e.ci_ip
-      ci.id = e.ci_id
-      ci.siteid = e.ci_siteid
-      ci.userid = e.ci_userid
-      rtn.clientInfo = ci
+      rtn.clientInfo =
+        ip: e.ci_ip
+        id: e.ci_id
+        siteid: e.ci_siteid
+        userid: e.ci_userid
     rtn
 
 module.exports = LogStore

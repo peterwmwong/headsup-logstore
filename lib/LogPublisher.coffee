@@ -39,7 +39,6 @@ LogPublisher.prototype =
     @_disconnected = true
     for conn in ['_db','_pub']
       @[conn].end()
-      @[conn].removeAllListeners 'error'
 
   log: (entries,cb=->)->
     if @_checkConn cb

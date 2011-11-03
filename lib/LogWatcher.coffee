@@ -41,7 +41,4 @@ processConfig config, ({context, redis_host, redis_port, redis_dbid})->
               L "Error watching #{logfile}, err=", err
               watcher.unwatch()
             else
-              les = []
-              for l in lines when l
-                les.push ctx = parse(l, ctx)[0]
-              lp.log les
+              lp.log (ctx = parse(l, ctx) for l in lines when l)

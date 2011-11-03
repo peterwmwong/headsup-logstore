@@ -1,0 +1,1 @@
+define ['util/Model'], (Model)-> new Model()

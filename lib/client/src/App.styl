@@ -1,0 +1,27 @@
+@import 'box'
+@import 'pos'
+@import 'logstyles'
+
+body
+  font-family Helvetica,Arial,sans-serif
+  background-color #1A1A1A
+  color #888
+
+h1,h2,h3,h4,h5
+  margin 0
+  padding 0
+
+header-height = 22px
+
+.App
+  abspos 0px 0px 0px 0px
+
+  > .Header
+    position fixed
+    width 100%
+    top 0
+
+  > .LogView
+    padding-top header-height + 3px
+    padding-bottom 5px
+    width 100%

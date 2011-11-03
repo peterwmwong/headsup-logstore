@@ -1,7 +1,7 @@
 LogStore = require '../lib/LogStore'
 LogPublisher = require '../lib/LogPublisher'
 MockRedis = require './util/MockRedis'
-{isWindows,notyet,mocklog,runUntil} = require './util/SpecHelpers'
+{isWindows,notyet,mocklog,runUntil,addIdContext} = require './util/SpecHelpers'
 redis = require 'redis'
 
 if isWindows() and (not process.env.TEST_REDIS_HOST or not process.env.TEST_REDIS_PORT)
@@ -39,15 +39,28 @@ describe "LogStore", ->
 
   describe ".on('log', callback)", ->
     it 'calls callback, when Log Entry is published', ->
-      lp = new LogPublisher context:'test', host:mockRedis.host, port:mockRedis.port, dbid: curdbid
-      logstores = for i in [0...3] then new LogStore host:mockRedis.host, port:mockRedis.port, dbid: curdbid
+      lp = new LogPublisher
+        context:'test'
+        host:mockRedis.host
+        port:mockRedis.port
+        dbid: curdbid
+
+      logstores = for i in [0...3]
+        new LogStore
+          host:mockRedis.host
+          port:mockRedis.port
+          dbid: curdbid
+
       @after -> for logstore in [lp, logstores...] then logstore.end()
 
       mlogs = [mocklog()]
       logsReceived = 0
       for logstore in logstores
         logstore.on 'log', (log)->
-          expect(log).toEqual mlogs
+          expect(log).toEqual do->
+            for l in mlogs
+              l.context = 'test'
+              l
           ++logsReceived
 
       runs -> lp.log mlogs
@@ -66,7 +79,9 @@ describe "LogStore", ->
       runUntil (done)-> lp.log mlogs, done
       runs -> ls.get {}, (err, entries)-> received = entries
       waitsFor -> received
-      runs -> expect(received).toEqual mlogs.reverse().slice(0,DEFAULT_COUNT)
+      runs -> expect(received).toEqual do->
+        for l in mlogs.reverse().slice(0,DEFAULT_COUNT)
+          addIdContext l, l.id, 'test'
 
     it "returns last X log entries, if X < #{DEFAULT_COUNT}", ->
       lp = new LogPublisher context:'test', host:mockRedis.host, port:mockRedis.port, dbid: curdbid
@@ -77,7 +92,9 @@ describe "LogStore", ->
       runUntil (done)-> lp.log mlogs, done
       runs -> ls.get {}, (err, entries)-> received = entries
       waitsFor -> received
-      runs -> expect(received).toEqual mlogs.reverse()
+      runs -> expect(received).toEqual do->
+        for l in mlogs.reverse()
+          addIdContext l, l.id, 'test'
 
 
   describe ".get({filterBy: {context}})", ->
@@ -98,8 +115,12 @@ describe "LogStore", ->
         ls.get {filterBy: {context: 'two'}}, (err, entries)-> receivedTwo = entries
       waitsFor -> receivedOne and receivedTwo
       runs ->
-        expect(receivedOne).toEqual oneLogs.reverse().slice(0,DEFAULT_COUNT)
-        expect(receivedTwo).toEqual twoLogs.reverse().slice(0,DEFAULT_COUNT)
+        expect(receivedOne).toEqual do->
+          for l in oneLogs.reverse().slice(0,DEFAULT_COUNT)
+            addIdContext l, l.id, 'one'
+        expect(receivedTwo).toEqual do->
+          for l in twoLogs.reverse().slice(0,DEFAULT_COUNT)
+            addIdContext l, l.id, 'two'
 
 
   describe ".get({filterBy: {clientip}})", ->
@@ -126,9 +147,9 @@ describe "LogStore", ->
       runUntil (done)->
         ls.get {filterBy:{clientip:'1'}}, (err,entries)->
           expect(entries).toEqual [
-            mlogs[4]
-            mlogs[2]
-            mlogs[0]
+            addIdContext mlogs[4], 4, 'test'
+            addIdContext mlogs[2], 2, 'test'
+            addIdContext mlogs[0], 0, 'test'
           ]
           done()
 
@@ -152,14 +173,19 @@ describe "LogStore", ->
       runUntil (done)->
         ls.get {start: 2}, (err, entries)->
           expect(err).toBe undefined
-          expect(entries).toEqual mlogs.slice(0,3).reverse()
+          expect(entries).toEqual do->
+            start = 2
+            for l in mlogs.slice(0,3).reverse()
+              addIdContext l, start--, 'test'
           done()
 
 
   describe "._toLog(hash)", ->
     it "converts hash to Log Entry", ->
       l = mocklog()
+      l.id = 77
       hash = 
+        id: "#{l.id}"
         msg: l.msg
         date: l.date
         category: l.category
@@ -172,8 +198,10 @@ describe "LogStore", ->
 
     it "doesn't add clientInfo if ci_ip, ci_id, ci_siteid, or ci_userid or present", ->
       l = mocklog()
+      l.id = 88
       delete l.clientInfo
       hash = 
+        id: "#{l.id}"
         msg: l.msg
         date: l.date
         category: l.category

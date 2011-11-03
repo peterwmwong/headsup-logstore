@@ -61,6 +61,8 @@ LogStore::[k]=v for k,v of do->
 
   _toLog: (e)->
     rtn =
+      id: Number e.id
+      context: e.context
       msg: e.msg
       date: Number e.date
       category: e.category

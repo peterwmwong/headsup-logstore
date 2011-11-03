@@ -1,6 +1,6 @@
 os = require 'os'
-randint = (max)-> Math.ceil Math.random()*max
 module.exports =
+  randint: randint = (max)-> Math.ceil Math.random()*max
   isWindows: -> not not /^Windows/.exec os.type()
   notyet: -> @fail '>> Not implemented yet <<'
   mocklog: (overrides)->
@@ -8,10 +8,10 @@ module.exports =
     {ip,id,siteid,userid} = clientInfo or {}
     msg: "Random msg #{randint 256}"
     date: date or Date.now()
-    category: category or "MOCK#{randint 10}"
+    category: category or "MOK#{randint 10}"
     codeSource: codeSource or 'mockCodeSource'
     clientInfo:
-      ip: ip or "172.16.18.#{randint 256}"
+      ip: ip or "172.167.182.#{randint 256}"
       id: id or "#{randint 10}"
       siteid: siteid or "#{randint 256}"
       userid: userid or "#{randint 256}"
@@ -22,8 +22,9 @@ module.exports =
       cb -> isdone = true
     waitsFor (-> isdone),2000
 
-  toHash: (l,logid)->
-    logid: logid.toString()
+  toHash: (l,logid,context)->
+    context: context
+    id: logid.toString()
     msg: l.msg
     date: l.date.toString()
     category: l.category
@@ -32,3 +33,8 @@ module.exports =
     ci_id: l.clientInfo.id.toString()
     ci_siteid: l.clientInfo.siteid.toString()
     ci_userid: l.clientInfo.userid.toString()
+  
+  addIdContext: (l,id,ctx)->
+    l.id = Number id
+    l.context = ctx
+    l

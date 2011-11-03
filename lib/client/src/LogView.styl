@@ -1,0 +1,56 @@
+@import 'box'
+@import 'logstyles'
+
+.LogView
+  font-size 18px
+
+  > .log
+    padding 0px 5px 0px 5px
+    color #DDD
+    box horizontal
+    width 100%
+    box-sizing border-box
+
+    log-line-height = 14px
+
+    &:hover
+      background-color #1D1D1D
+      > p, > a, > div
+        color log-text-color-hover
+
+    > .context, > .date, > .siteid, > .cat, > .ip
+      color log-text-color
+      margin 0 10px 0 2px
+      font-size 12px
+      line-height log-line-height
+      vertical-align middle
+      display inline-block
+
+    > .context
+      minwidth log-context-size
+      vertical-align middle
+
+    > .date
+      min-width log-date-size
+
+    > .siteid
+      min-width log-siteid-size
+    
+    > .cat
+      min-width log-cat-size
+
+    > .ip
+      color log-text-color
+      overflow hidden
+      margin 0 10px 0 0
+      min-width log-ip-size
+      white-space nowrap
+      text-overflow ellipsis
+
+    > .msg
+      box-flex 1
+      word-wrap break-word
+      display inline-block
+      font-size 12px
+      line-height log-line-height
+      color log-text-color

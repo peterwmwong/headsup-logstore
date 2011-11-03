@@ -1,0 +1,11 @@
+.LogView{font-size:18px;}
+.LogView > .log{padding:0 5px 0 5px;color:#ddd;display:box;display:-webkit-box;display:-moz-box;-webkit-box-orient:horizontal;-moz-box-orient:horizontal;width:100%;box-sizing:border-box;-moz-box-sizing:border-box;-webkit-box-sizing:border-box;}
+.LogView > .log:hover{background-color:#1d1d1d;}
+.LogView > .log:hover > p,.LogView > .log:hover > a,.LogView > .log:hover > div{color:#888}
+.LogView > .log > .context,.LogView > .log > .date,.LogView > .log > .siteid,.LogView > .log > .cat,.LogView > .log > .ip{color:#444;margin:0 10px 0 2px;font-size:12px;line-height:14px;vertical-align:middle;display:inline-block}
+.LogView > .log > .context{minwidth:25px;vertical-align:middle}
+.LogView > .log > .date{min-width:90px}
+.LogView > .log > .siteid{min-width:25px}
+.LogView > .log > .cat{min-width:35px}
+.LogView > .log > .ip{color:#444;overflow:hidden;margin:0 10px 0 0;min-width:93px;white-space:nowrap;text-overflow:ellipsis}
+.LogView > .log > .msg{box-flex:1;-webkit-box-flex:1;-moz-box-flex:1;word-wrap:break-word;display:inline-block;font-size:12px;line-height:14px;color:#444}

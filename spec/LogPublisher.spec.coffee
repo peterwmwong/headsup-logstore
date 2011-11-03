@@ -1,13 +1,13 @@
 LogStore = require '../lib/LogStore'
 LogPublisher = require '../lib/LogPublisher'
 MockRedis = require './util/MockRedis'
-{isWindows,mocklog,runUntil,toHash} = require './util/SpecHelpers'
+{isWindows,mocklog,runUntil,toHash,randint} = require './util/SpecHelpers'
 redis = require 'redis'
 
 L = console.log.bind console
 
 describe "LogPublisher", ->
-  context = 'test'
+  context = "test#{randint 10}"
   lp = null
   db = null
   mockRedis = null
@@ -84,7 +84,10 @@ describe "LogPublisher", ->
       runs ->
         expect(received).toEqual
           channel: 'log'
-          logs: logs
+          logs: for l,i in logs
+            l.id = i
+            l.context = context
+            l
 
     it 'logs multiple log entries', ->
       runUntil (done)->
@@ -109,7 +112,7 @@ describe "LogPublisher", ->
               exp = ['5']
               for log,i in logs
                 exp = exp.concat [
-                  toHash log, i
+                  toHash log, i, context
                   "#{log.date*1000}"
                   "#{log.date*1000}"
                   "#{log.date*1000}"
@@ -130,7 +133,8 @@ describe "LogPublisher", ->
   describe "._toHash()", ->
 
     it "hashes full Log Entry", ->
-      expect(lp._toHash(l = mocklog())).toEqual
+      l = mocklog()
+      expect(lp._toHash l).toEqual
         msg: l.msg
         date: l.date
         category: l.category

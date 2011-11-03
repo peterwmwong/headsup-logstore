@@ -60,8 +60,11 @@ LogPublisher.prototype =
           @_db.incrby "nextlogid", hashes.length, (e,logid)=>
             logid = logid - hashes.length
             $M = @_db.multi()
-            for h in hashes
-              h.logid = logid
+
+            for h,id in hashes
+              h.id = logs[id].id = logid
+              h.context = logs[id].context = @context
+
               $M.hmset "log:#{logid}", h
               $M.zadd "context:#{@context}", (sdate = @_saltDate(h.date)), logid
               if ip = h.ci_ip
@@ -69,6 +72,7 @@ LogPublisher.prototype =
                 $M.zadd "context_ip:#{@context}:#{ip}", sdate, logid
               $M.zadd "all", sdate, logid
               ++logid
+
             $M.exec (dbError)=>
               @_pub.publish 'log', JSON.stringify logs
               if numFailed or dbError then cb {numFailed,dbError}

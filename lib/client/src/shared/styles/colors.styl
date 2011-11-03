@@ -1,0 +1,23 @@
+@import 'gradient';
+
+bg-color-dark = #333
+bg-color = #404040
+bg-color-light = #4D4D4D
+bg-selected-color-dark = #666
+bg-selected-color-light = #777
+shadow-color = #222
+shadow-color-dark = #111
+text-color = #FFF
+text-color-dark = #DDD
+text-disabled-color = #999
+
+bg-selected-gradient()
+  gradient bg-selected-color-dark bg-selected-color-light 50% 100%
+
+
+desat-amt = 10%
+badge-red = desaturate(#992626,desat-amt)
+badge-yellow = darken(desaturate(#997626,desat-amt),10%)
+badge-gray = #222222
+badge-green = darken(desaturate(#597F1F,desat-amt),10%)
+

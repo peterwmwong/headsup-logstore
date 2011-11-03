@@ -3,7 +3,7 @@ MockRedis = require './util/MockRedis'
 path = require 'path'
 fs = require 'fs'
 {spawn,fork} = require 'child_process'
-{notyet,mocklog,runUntil} = require './util/SpecHelpers'
+{notyet,mocklog,runUntil,addIdContext} = require './util/SpecHelpers'
 redis = require 'redis'
 
 L = console.log.bind console
@@ -122,11 +122,12 @@ describe "LogWatcher", ->
         msg: 'Initialization processed in 422 ms'
       }]
 
+      expectedLogs = (addIdContext l, i, 'test' for l,i in mockLogs)
       runUntil (done)->
         ls.on 'log', (logs)->
-          expect(logs).toEqual mockLogs
+          expect(logs).toEqual expectedLogs
           ls.get {}, (err, entries)->
-            expect(entries).toEqual mockLogs
+            expect(entries).toEqual expectedLogs
             done()
 
       setTimeout (->

@@ -2,14 +2,17 @@
 {EventEmitter} = require 'events'
 redis = require 'redis'
 
-LogPublisher = ({@context,port,host,dbid,onConnect})->
+LogPublisher = ({@context,port,host,dbid,onConnect,disableRetryConnect})->
   if not @context? then throw 'No @context was supplied.'
   if typeof onConnect isnt 'function'
     onConnect = undefined
 
   for conn in ['_db','_pub']
     c = @[conn] = redis.createClient port, host
-    c.retry_delay = 750
+    
+    # node redis hack to disable retry connection
+    c.retry_timer = true if disableRetryConnect
+
     c.select dbid if dbid
     if onConnect
       c.once 'error', ->

@@ -30,14 +30,7 @@ client: deps lib/client/src/cell.js lib/client/src/cell-pluginBuilder.js
 # TEST
 #------------------------------------------------------------------- 
 spec: deps
-	for i in $$(ls spec/*.spec.coffee); do \
-		echo "---- $$i ----"; \
-		node_modules/.bin/jasmine-node --coffee "$$i"; \
-	done
-	#TODO: Figure out how to prevent node_redis from reconnecting,
-	#      causing an error at the end LogPublisher, and borking
-	#      jasmin-node from continuing on.
-	# node_modules/.bin/jasmine-node --coffee spec/
+	node_modules/.bin/jasmine-node --coffee spec/
 
 #-------------------------------------------------------------------
 # DEV 

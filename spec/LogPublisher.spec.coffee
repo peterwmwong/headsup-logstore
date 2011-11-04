@@ -49,6 +49,7 @@ describe "LogPublisher", ->
           port: 7
           host: '127.127.127.127'
           dbid: curdbid
+          disableRetryConnect: true
           onConnect: (err)->
             expect(err).toBe "Could not connect to 127.127.127.127:7"
             done()

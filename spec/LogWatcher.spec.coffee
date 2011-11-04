@@ -81,10 +81,6 @@ describe "LogWatcher", ->
     curdbid = 0
 
     beforeEach ->
-
-      runUntil (done)->
-        dir = path.resolve "#{process.env.TEMP or '/tmp'}/LogWatcher-#{Date.now()}"
-        fs.mkdir dir, "0777", done
       runUntil (done)->
         if not db or not mockRedis
           new MockRedis (mr)->

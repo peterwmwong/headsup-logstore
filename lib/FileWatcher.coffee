@@ -2,6 +2,8 @@ path = require 'path'
 fs = require 'fs'
 util = require 'util'
 
+newlineRx = /\r?\n/
+
 module.exports =
 
   watch: (file, cb)->
@@ -31,7 +33,7 @@ module.exports =
                   prev = cur
 
                   fs.read fd, buf, 0, size, pos, (err,bytesRead,buffer)-> if err then cb err else
-                    lines = buffer.slice(0, bytesRead).toString().split '\n'
+                    lines = buffer.slice(0, bytesRead).toString().split newlineRx
                     oldPrevLine = prevLine
                     prevLine = lines.pop()
                     if lines?.length

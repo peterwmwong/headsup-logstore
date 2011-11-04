@@ -6,6 +6,9 @@ LogPublisher = require './LogPublisher'
 {parse} = require './LogParser'
 L = console.log.bind(console)
 
+config = process.argv[2]
+logfile = process.argv[3]
+
 processConfig = (cfgFile, cb)->
   if not path.existsSync(cfgFile) or not fs.lstatSync(cfgFile).isFile()
     L "#{config} is not a file."
@@ -18,10 +21,6 @@ processConfig = (cfgFile, cb)->
 
     if not c then L "#{config} does not contain JSON."
     else cb c
-
-# Read config
-config = process.argv[2]
-logfile = process.argv[3]
 
 processConfig config, ({context, redis_host, redis_port, redis_dbid})->
   if not path.existsSync(logfile) or not fs.lstatSync(logfile).isFile()

@@ -65,6 +65,23 @@ describe "FileWatcher", ->
           "TEST DATA 3"
         ]
 
+    it "assembles lines on newline (Windows line endings), even when received chunks split lines.", ->
+      runs =>
+        ws = fs.createWriteStream file, flags: 'a'
+        @after -> try ws?.writable and ws?.end()
+
+        setTimeout (-> ws.write "TEST DATA 1\r\nTEST D"), 10
+        setTimeout (-> ws.write "ATA 2\r\nTEST D"), 50
+        setTimeout (-> ws.end "ATA 3\r\n" ), 100
+      waitsFor -> received.length >= 3
+      runs ->
+        expect(received_err).toEqual []
+        expect(received).toEqual [
+          "TEST DATA 1"
+          "TEST DATA 2"
+          "TEST DATA 3"
+        ]
+
     it "calls cb with array of lines, when file overwritten [!!! FLAKY: see TODO and https://github.com/joyent/node/issues/1970]", ->
       runs ->
         setTimeout (->

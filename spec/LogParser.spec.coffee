@@ -2,13 +2,18 @@
 
 describe 'LogParser', ->
 
-  describe '.parse()', ->
+  describe '.parse(line, context)', ->
+
+    it 'parses blank lines', ->
+      expect(parse "").toEqual msg: ""
+      expect(parse "   ").toEqual msg: "   "
+      expect(parse "   \n").toEqual msg: "   \n"
 
     it 'parses message only Log Entry', ->
       msg = '123 1241 sdflksd 87324 sk !@%!@%'
       expect(parse msg).toEqual msg: msg
 
-    it 'parses message only Log Entry, uses parse context', ->
+    it 'parses message only Log Entry, uses context to fill in date, category, codeSource, and clientInfo', ->
       msg = '123 1241 sdflksd 87324 sk !@%!@%'
       ctx =
         date: Date.now()

@@ -67,8 +67,11 @@ LogPublisher.prototype =
             for h,id in hashes
               h.id = logs[id].id = logid
               h.context = logs[id].context = @context
+              newh = {}
+              for k,v of h
+                newh["#{logid}#{k}"] = v
 
-              $M.hmset "log:#{logid}", h
+              $M.hmset "logs", newh
               $M.zadd "context:#{@context}", (sdate = @_saltDate(h.date)), logid
               if ip = h.ci_ip
                 $M.zadd "ip:#{ip}", sdate, logid

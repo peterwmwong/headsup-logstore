@@ -18,7 +18,7 @@ module.exports =
         fs.stat file, (err,prev)-> if err then cb err else
           if not unwatch
             prevLine = ""
-            buf = new Buffer 128*1024
+            buf = new Buffer 10*1024*1024
             watcher = fs.watch file, (ev,fname)->
               if fname and not unwatch and ev is 'change'
                 fs.stat file, (err,cur)-> if err then cb err else

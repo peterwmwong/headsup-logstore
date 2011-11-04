@@ -1,0 +1,275 @@
+                                         
+                                                                     
+                                                                     
+                                             
+2011-11-03 14:10:22	INFO 	TransactionTimeoutOverride	()	Unable to find file: ..\..\fsc\bin\transactiontimeouts.properties
+2011-11-03 14:10:22	INFO 	Embedded	()	Catalina naming disabled
+2011-11-03 14:10:22	WARN 	Connector	()	Property debug not found on the protocol handler.
+2011-11-03 14:10:22	WARN 	Digester	()	  No rules found matching 'Server/Service/Engine/Host/Logger'.
+2011-11-03 14:10:22	INFO 	AprLifecycleListener	()	The Apache Tomcat Native library which allows optimal performance in production environments was not found on the java.library.path: ../lib
+2011-11-03 14:10:22	INFO 	Http11Protocol	()	Initializing Coyote HTTP/1.1 on http-0.0.0.0-80
+2011-11-03 14:10:22	INFO 	Http11Protocol	()	Initializing Coyote HTTP/1.1 on http-0.0.0.0-443
+2011-11-03 14:10:22	INFO 	AjpProtocol	()	Initializing Coyote AJP/1.3 on ajp-0.0.0.0-8009
+2011-11-03 14:10:22	INFO 	Catalina	()	Initialization processed in 257 ms
+2011-11-03 14:10:22	INFO 	StandardService	()	Starting service jboss.web
+2011-11-03 14:10:22	INFO 	StandardEngine	()	Starting Servlet Engine: JBossWeb/2.0.1.GA
+2011-11-03 14:10:22	INFO 	Catalina	()	Server startup in 28 ms
+2011-11-03 14:10:41	INFO 	STDOUT	()	PerfMon4j found SQL/JDBC class: (net.sourceforge.jtds.jdbc.Driver) With interfaces: java.sql.Driver
+2011-11-03 14:10:41	INFO 	STDOUT	()	PerfMon4j found SQL/JDBC class: (net.sourceforge.jtds.jdbc.ConnectionJDBC2) With interfaces: java.sql.Wrapper, java.sql.Connection
+2011-11-03 14:10:41	INFO 	STDOUT	()	PerfMon4j found SQL/JDBC class: (net.sourceforge.jtds.jdbc.JtdsStatement) With interfaces: java.sql.Statement, java.sql.Wrapper
+2011-11-03 14:10:41	INFO 	STDOUT	()	PerfMon4j found SQL/JDBC class: (net.sourceforge.jtds.jdbc.JtdsCallableStatement) With interfaces: java.sql.Wrapper, java.sql.PreparedStatement, java.sql.Statement, java.sql.CallableStatement
+2011-11-03 14:10:41	INFO 	STDOUT	()	PerfMon4j found SQL/JDBC class: (net.sourceforge.jtds.jdbc.JtdsPreparedStatement) With interfaces: java.sql.Statement, java.sql.Wrapper, java.sql.PreparedStatement
+2011-11-03 14:10:41	INFO 	STDOUT	()	PerfMon4j found SQL/JDBC class: (net.sourceforge.jtds.jdbc.JtdsResultSet) With interfaces: java.sql.ResultSet, java.sql.Wrapper
+2011-11-03 14:10:41	INFO 	ThreadTracer	()	ThreadTracer category='DestinyLogger' found.  To enable add system property 'ThreadTracer.DestinyLogger=ON'
+2011-11-03 14:10:45	WARN 	SessionFactoryObjectFactory	()	InitialContext did not implement EventContext
+2011-11-03 14:10:50	INFO 	ActionServlet	()	Loading chain catalog from jar:file:/G:/deploy-gwinnetLM/FSC-Destiny/jboss/server/destiny/lib/struts-core.jar!/org/apache/struts/chain/chain-config.xml
+2011-11-03 14:10:54	INFO 	deployer	()	Configuring EJB3 method synchronization from file 'G:\deploy-gwinnetLM\FSC-Destiny\fsc\bin\ejb3-synchronizations.xml'
+2011-11-03 14:10:54	INFO 	deployer	()	struts-menu initialization successfull
+2011-11-03 14:10:54	INFO 	deployer	()	Skipping SQL Server Memory Configuration
+2011-11-03 14:10:54	INFO 	deployer	()	Configuring Jasper Reports
+2011-11-03 14:10:54	INFO 	JobConcurrency	()	Starting buildJobMatrix for context = destiny
+2011-11-03 14:10:55	INFO 	JobConcurrency	()	Ending buildJobMatrix for context = destiny
+2011-11-03 14:10:55	INFO 	JobConcurrency	()	Starting buildJobMatrix for context = destiny
+2011-11-03 14:10:55	INFO 	JobConcurrency	()	Ending buildJobMatrix for context = destiny
+2011-11-03 14:10:55	INFO 	deployer	()	Registering Destiny Services
+2011-11-03 14:10:55	INFO 	DestinyServicesBean	()	Registering Destiny Services
+2011-11-03 14:10:55	INFO 	DestinyServicesBean	()	Removing leftover JasperReports cache files...
+2011-11-03 14:10:55	INFO 	ChurchillService	()	Starting Churchill Job Manager
+2011-11-03 14:10:55	INFO 	JobLauncherBase	()	Job Launcher Started
+2011-11-03 14:10:56	INFO 	ChurchillService	()	Churchill Job Manager started
+2011-11-03 14:10:56	INFO 	JobMonitor	()	Starting JobMonitor(Context: com.follett.fsc.common.consortium.DistrictContext - Context=destiny)...
+2011-11-03 14:10:56	INFO 	LuceneWrapper	()	Lucene.MaxCrissCrossSearchSize=2147483647
+2011-11-03 14:10:56	INFO 	LuceneWrapper	()	Lucene.MaxCrissCrossDurationMillis=5000
+2011-11-03 14:10:56	INFO 	LuceneWrapper	()	MAX_LUCENE_BOOLEAN_CLAUSE_COUNT=5000
+2011-11-03 14:10:56	INFO 	LuceneWrapper	()	LuceneWrapper.minimumFuzzyTermsForShortCut=10
+2011-11-03 14:10:56	INFO 	LuceneWrapper	()	LuceneWrapper.minimumLevenshteinForFuzzyShortCut=0.8
+2011-11-03 14:10:56	INFO 	LuceneWrapper	()	MAX_LUCENE_SEARCH_THREADS=25
+2011-11-03 14:10:56	INFO 	LuceneWrapper	()	PARAM_LUCENE_CACHED_BLOCKING_WAIT_MILLIS=120000
+2011-11-03 14:10:56	INFO 	LuceneWrapper	()	MAX_LUCENE_CACHED_QUERIES=50
+2011-11-03 14:10:56	INFO 	LuceneWrapper	()	LUCENE_CACHED_ELAPSED_MILLIS=30000
+2011-11-03 14:10:56	INFO 	LuceneWrapper	()	MAX_LUCENE_QUEUED_THREADS=-1
+2011-11-03 14:10:56	INFO 	LuceneWrapper	()	MAX_LUCENE_QUEUED_THREAD_WAIT_MILLIS=30000
+2011-11-03 14:10:56	INFO 	LuceneWrapper	()	Lucene ThreadGovernor installed in lucene MaxLuceneSearchThreads=25 MaxLuceneQueuedThreads=-1
+2011-11-03 14:10:56	INFO 	LuceneWrapper	()	Lucene Caching initiated with MaxLuceneCachedQueries=50, LuceneCachedElapsedMillis=30000
+2011-11-03 14:10:56	INFO 	DestinyServicesBean	()	Registering Service Z3950Service
+2011-11-03 14:10:56	INFO 	DestinyServicesBean	()	Starting Service Z3950Service
+2011-11-03 14:10:56	INFO 	Z3950Service	()	Starting Z-Client service...
+2011-11-03 14:10:56	INFO 	Z3950Service	()	Starting Z-Server service...
+2011-11-03 14:10:56	INFO 	Z3950Service	()	Server IP address not specified. Using the default.
+2011-11-03 14:10:56	INFO 	Z3950Service	()	Server IP address is 172.16.19.63
+2011-11-03 14:10:56	INFO 	Z3950Service	()	Unable to parse server port. Using the default.
+2011-11-03 14:10:56	INFO 	Z3950Service	()	Server port is 210
+2011-11-03 14:10:56	INFO 	Z3950Service	()	Unable to parse maxsessions. Using the default.
+2011-11-03 14:10:56	INFO 	Z3950Service	()	Maximum number of sessions is 50
+2011-11-03 14:10:56	INFO 	Z3950Service	()	Unable to find database name. Using the default.
+2011-11-03 14:10:56	INFO 	Z3950Service	()	Database name is Main
+2011-11-03 14:10:56	INFO 	Z3950Service	()	Unable to find collection name. Using the default.
+2011-11-03 14:10:56	INFO 	Z3950Service	()	Collection name is Library Collection
+2011-11-03 14:10:56	INFO 	Z3950Service	()	Anonymous access enabled.
+2011-11-03 14:10:56	INFO 	DestinyServicesBean	()	Service Z3950Service Started
+2011-11-03 14:11:07	INFO 	DestinyServicesBean	()	Registering Service PerfMon4JService
+2011-11-03 14:11:07	INFO 	DestinyServicesBean	()	Starting Service PerfMon4JService
+2011-11-03 14:11:07	INFO 	STDOUT	()	Loading configuration from: perfmonconfig.xml
+2011-11-03 14:11:07	INFO 	DestinyServicesBean	()	Service PerfMon4JService Started
+2011-11-03 14:11:07	INFO 	DestinyServicesBean	()	Registering Service SIFService
+2011-11-03 14:11:07	INFO 	DestinyServicesBean	()	Starting Service SIFService
+2011-11-03 14:11:07	INFO 	DestinyServicesBean	()	Service SIFService Started
+2011-11-03 14:11:07	INFO 	DestinyServicesBean	()	Registering Service DebuggingService
+2011-11-03 14:11:07	INFO 	deployer	()	
+
+
+* * * * * * * * * * * * * * * * *
+* * * * * * * * * * * * * * * * *
+Destiny Resource Manager
+
+9.9.3.2 (au2) (06/10/2011)
+Server has been up since 11/3/2011 2:10 PM
+
+Virtual machine: Java HotSpot(TM) 64-Bit Server VM
+Vendor: Sun Microsystems Inc.
+Version: 11.0-b15
+Application Server Specs: Windows 7 Ultimate for x64 Systems Service Pack 1 - RAM: 18 GB
+Application Server Time: 2011-11-03 14:11:07.0
+
+Microsoft SQL Server 2008 R2 (RTM) - 10.50.1600.1 (X64) 
+	Apr  2 2010 15:48:46 
+	Copyright (c) Microsoft Corporation
+	Developer Edition (64-bit) on Windows NT 6.1 <X64> (Build 7601: Service Pack 1)
+
+Compatibility level: 90 (SQL Server Version 2005)
+JDBC driver: jTDS Type 4 JDBC Driver for MS SQL Server and Sybase - Version: 1.2
+JDBC URL: jdbc:jtds:sqlserver://127.0.0.1:1433/gwinnettLM;instance=;appName=gwinnettLM
+SQL Server Date: 2011-11-03 14:11:07.89
+* * * * * * * * * * * * * * * * *
+* * * * * * * * * * * * * * * * *
+
+2011-11-03 14:11:07	INFO 	deployer	()	Done registering services.
+2011-11-03 14:11:28	INFO 	deployer	()	Initializing Destiny Locale
+2011-11-03 14:11:28	INFO 	deployer	()	Footer Server Time Format: M/d/yyyy h:mm a z
+2011-11-03 14:11:29	INFO 	deployer	()	Setting locale: Short Date Format is 'M/d/yyyy'
+2011-11-03 14:11:29	INFO 	deployer	()	Setting locale: Destiny Locale is 'en,US, '
+2011-11-03 14:11:29	INFO 	deployer	()	Finished initalizing Destiny components
+2011-11-03 14:11:29	INFO 	Http11Protocol	()	Starting Coyote HTTP/1.1 on http-0.0.0.0-80
+2011-11-03 14:11:29	INFO 	Http11Protocol	()	Starting Coyote HTTP/1.1 on http-0.0.0.0-443
+2011-11-03 14:11:29	INFO 	AjpProtocol	()	Starting Coyote AJP/1.3 on ajp-0.0.0.0-8009
+2011-11-03 14:11:29	INFO 	Server	()	JBoss (MX MicroKernel) [4.2.3.GA (build: SVNTag=JBoss_4_2_3_GA date=201002081550)] Started in 1m:18s:911ms
+2011-11-03 14:11:58	INFO 	a	( Joblet: com.follett.fsc.destiny.session.common.churchill.SyncFollettEBooksJoblet)	maxLoad calculated = 1489
+2011-11-03 14:11:58	WARN 	DestinyHttpClient	( Joblet: com.follett.fsc.destiny.session.common.churchill.SyncFollettEBooksJoblet)	Unknown proxy port ${PROXY_PORT} default to 8080
+2011-11-03 14:11:58	WARN 	URLHelper	( Joblet: com.follett.fsc.destiny.session.common.churchill.SyncFollettEBooksJoblet)	Unknown proxy port ${PROXY_PORT} default to 8080
+2011-11-03 14:12:00	WARN 	URLHelper	( Joblet: com.follett.fsc.destiny.session.common.churchill.SyncFollettEBooksJoblet)	Failed to connect to server. trying again.
+java.net.UnknownHostException: ${PROXY_HOST}
+	at java.net.PlainSocketImpl.connect(PlainSocketImpl.java:177)
+	at java.net.SocksSocketImpl.connect(SocksSocketImpl.java:366)
+	at java.net.Socket.connect(Socket.java:519)
+	at java.net.Socket.connect(Socket.java:469)
+	at java.net.Socket.<init>(Socket.java:366)
+	at java.net.Socket.<init>(Socket.java:240)
+	at org.apache.commons.httpclient.protocol.DefaultProtocolSocketFactory.createSocket(Unknown Source)
+	at org.apache.commons.httpclient.protocol.ControllerThreadSocketFactory$1.doit(Unknown Source)
+	at org.apache.commons.httpclient.protocol.ControllerThreadSocketFactory$SocketTask.run(Unknown Source)
+	at java.lang.Thread.run(Thread.java:619)
+2011-11-03 14:12:00	ERROR	SyncFollettEBooksJoblet	( Joblet: com.follett.fsc.destiny.session.common.churchill.SyncFollettEBooksJoblet)	Syncing of Follett eBooks was unsuccessful.
+com.follett.fsc.destiny.util.BaseException: Received an error trying to communicate with Follett eBook Server.
+Wrapping (com.follett.fsc.destiny.util.BaseException) MESSAGE: Failed to download file from url 'http://ebooks.fsc.follett.com/ebooks/query'
+	at com.follett.fsc.destiny.session.common.ejb.FollettEBookBean.a(SourceFile:435)
+	at com.follett.fsc.destiny.session.common.ejb.FollettEBookBean.synchronizeFollettEBooks(SourceFile:305)
+	at sun.reflect.NativeMethodAccessorImpl.invoke0(Native Method)
+	at sun.reflect.NativeMethodAccessorImpl.invoke(NativeMethodAccessorImpl.java:39)
+	at sun.reflect.DelegatingMethodAccessorImpl.invoke(DelegatingMethodAccessorImpl.java:25)
+	at java.lang.reflect.Method.invoke(Method.java:597)
+	at org.jboss.aop.joinpoint.MethodInvocation.invokeNext(MethodInvocation.java:112)
+	at org.jboss.ejb3.interceptor.InvocationContextImpl.proceed(InvocationContextImpl.java:166)
+	at org.jboss.ejb3.interceptor.EJB3InterceptorsInterceptor.invoke(EJB3InterceptorsInterceptor.java:63)
+	at org.jboss.aop.joinpoint.MethodInvocation.invokeNext(MethodInvocation.java:101)
+	at org.jboss.ejb3.entity.TransactionScopedEntityManagerInterceptor.invoke(TransactionScopedEntityManagerInterceptor.java:54)
+	at org.jboss.aop.joinpoint.MethodInvocation.invokeNext(MethodInvocation.java:101)
+	at org.jboss.ejb3.AllowedOperationsInterceptor.invoke(AllowedOperationsInterceptor.java:47)
+	at org.jboss.aop.joinpoint.MethodInvocation.invokeNext(MethodInvocation.java:101)
+	at com.follett.fsc.jbosshelper.HallPassInterceptor.invoke(HallPassInterceptor.java:52)
+	at org.jboss.aop.joinpoint.MethodInvocation.invokeNext(MethodInvocation.java:101)
+	at org.jboss.aspects.tx.TxPolicy.invokeInNoTx(TxPolicy.java:66)
+	at org.jboss.aspects.tx.TxInterceptor$Supports.invoke(TxInterceptor.java:144)
+	at org.jboss.aop.joinpoint.MethodInvocation.invokeNext(MethodInvocation.java:101)
+	at org.jboss.aspects.tx.TxPropagationInterceptor.invoke(TxPropagationInterceptor.java:95)
+	at org.jboss.aop.joinpoint.MethodInvocation.invokeNext(MethodInvocation.java:101)
+	at org.jboss.ejb3.stateless.StatelessInstanceInterceptor.invoke(StatelessInstanceInterceptor.java:62)
+	at org.jboss.aop.joinpoint.MethodInvocation.invokeNext(MethodInvocation.java:101)
+	at com.follett.fsc.jbosshelper.ejb3.UserContextEJB3ServerInterceptor.invokeWithSynchronization(UserContextEJB3ServerInterceptor.java:90)
+	at com.follett.fsc.jbosshelper.ejb3.UserContextEJB3ServerInterceptor.invokeNext(UserContextEJB3ServerInterceptor.java:56)
+	at com.follett.fsc.jbosshelper.ejb3.UserContextEJB3ServerInterceptor.invoke(UserContextEJB3ServerInterceptor.java:41)
+	at org.jboss.aop.joinpoint.MethodInvocation.invokeNext(MethodInvocation.java:101)
+	at org.jboss.aspects.security.AuthenticationInterceptor.invoke(AuthenticationInterceptor.java:77)
+	at org.jboss.ejb3.security.Ejb3AuthenticationInterceptor.invoke(Ejb3AuthenticationInterceptor.java:110)
+	at org.jboss.aop.joinpoint.MethodInvocation.invokeNext(MethodInvocation.java:101)
+	at org.jboss.ejb3.ENCPropagationInterceptor.invoke(ENCPropagationInterceptor.java:46)
+	at org.jboss.aop.joinpoint.MethodInvocation.invokeNext(MethodInvocation.java:101)
+	at org.jboss.ejb3.asynchronous.AsynchronousInterceptor.invoke(AsynchronousInterceptor.java:106)
+	at org.jboss.aop.joinpoint.MethodInvocation.invokeNext(MethodInvocation.java:101)
+	at org.jboss.ejb3.stateless.StatelessContainer.localInvoke(StatelessContainer.java:240)
+	at org.jboss.ejb3.stateless.StatelessContainer.localInvoke(StatelessContainer.java:210)
+	at org.jboss.ejb3.stateless.StatelessLocalProxy.invoke(StatelessLocalProxy.java:84)
+	at $Proxy800.synchronizeFollettEBooks(Unknown Source)
+	at com.follett.fsc.destiny.session.common.churchill.SyncFollettEBooksJoblet.run(SourceFile:49)
+	at com.follett.fsc.churchill.ChurchillJoblet.doRunCycle(ChurchillJoblet.java:134)
+	at com.follett.fsc.churchill.JobletManager$LauncherRunnable.run(JobletManager.java:406)
+	at java.util.concurrent.Executors$RunnableAdapter.call(Executors.java:441)
+	at java.util.concurrent.FutureTask$Sync.innerRun(FutureTask.java:303)
+	at java.util.concurrent.FutureTask.run(FutureTask.java:138)
+	at java.util.concurrent.ThreadPoolExecutor$Worker.runTask(ThreadPoolExecutor.java:886)
+	at java.util.concurrent.ThreadPoolExecutor$Worker.run(ThreadPoolExecutor.java:908)
+	at java.lang.Thread.run(Thread.java:619)
+Caused by: java.net.UnknownHostException: ${PROXY_HOST}
+	at java.net.PlainSocketImpl.connect(PlainSocketImpl.java:177)
+	at java.net.SocksSocketImpl.connect(SocksSocketImpl.java:366)
+	at java.net.Socket.connect(Socket.java:519)
+	at java.net.Socket.connect(Socket.java:469)
+	at java.net.Socket.<init>(Socket.java:366)
+	at java.net.Socket.<init>(Socket.java:240)
+	at org.apache.commons.httpclient.protocol.DefaultProtocolSocketFactory.createSocket(Unknown Source)
+	at org.apache.commons.httpclient.protocol.ControllerThreadSocketFactory$1.doit(Unknown Source)
+	at org.apache.commons.httpclient.protocol.ControllerThreadSocketFactory$SocketTask.run(Unknown Source)
+	... 1 more
+
+---ROOT EXCEPTION IS AS FOLLOWS---
+
+
+com.follett.fsc.destiny.util.BaseException: Failed to download file from url 'http://ebooks.fsc.follett.com/ebooks/query'
+	at com.follett.fsc.destiny.util.URLHelper.a(SourceFile:2198)
+	at com.follett.fsc.destiny.util.URLHelper.a(SourceFile:2123)
+	at com.follett.fsc.destiny.util.URLHelper.downloadFromURLToStringByPOST_DoNotUseCache(SourceFile:1833)
+	at com.follett.fsc.destiny.session.common.ejb.FollettEBookBean.a(SourceFile:427)
+	at com.follett.fsc.destiny.session.common.ejb.FollettEBookBean.synchronizeFollettEBooks(SourceFile:305)
+	at sun.reflect.NativeMethodAccessorImpl.invoke0(Native Method)
+	at sun.reflect.NativeMethodAccessorImpl.invoke(NativeMethodAccessorImpl.java:39)
+	at sun.reflect.DelegatingMethodAccessorImpl.invoke(DelegatingMethodAccessorImpl.java:25)
+	at java.lang.reflect.Method.invoke(Method.java:597)
+	at org.jboss.aop.joinpoint.MethodInvocation.invokeNext(MethodInvocation.java:112)
+	at org.jboss.ejb3.interceptor.InvocationContextImpl.proceed(InvocationContextImpl.java:166)
+	at org.jboss.ejb3.interceptor.EJB3InterceptorsInterceptor.invoke(EJB3InterceptorsInterceptor.java:63)
+	at org.jboss.aop.joinpoint.MethodInvocation.invokeNext(MethodInvocation.java:101)
+	at org.jboss.ejb3.entity.TransactionScopedEntityManagerInterceptor.invoke(TransactionScopedEntityManagerInterceptor.java:54)
+	at org.jboss.aop.joinpoint.MethodInvocation.invokeNext(MethodInvocation.java:101)
+	at org.jboss.ejb3.AllowedOperationsInterceptor.invoke(AllowedOperationsInterceptor.java:47)
+	at org.jboss.aop.joinpoint.MethodInvocation.invokeNext(MethodInvocation.java:101)
+	at com.follett.fsc.jbosshelper.HallPassInterceptor.invoke(HallPassInterceptor.java:52)
+	at org.jboss.aop.joinpoint.MethodInvocation.invokeNext(MethodInvocation.java:101)
+	at org.jboss.aspects.tx.TxPolicy.invokeInNoTx(TxPolicy.java:66)
+	at org.jboss.aspects.tx.TxInterceptor$Supports.invoke(TxInterceptor.java:144)
+	at org.jboss.aop.joinpoint.MethodInvocation.invokeNext(MethodInvocation.java:101)
+	at org.jboss.aspects.tx.TxPropagationInterceptor.invoke(TxPropagationInterceptor.java:95)
+	at org.jboss.aop.joinpoint.MethodInvocation.invokeNext(MethodInvocation.java:101)
+	at org.jboss.ejb3.stateless.StatelessInstanceInterceptor.invoke(StatelessInstanceInterceptor.java:62)
+	at org.jboss.aop.joinpoint.MethodInvocation.invokeNext(MethodInvocation.java:101)
+	at com.follett.fsc.jbosshelper.ejb3.UserContextEJB3ServerInterceptor.invokeWithSynchronization(UserContextEJB3ServerInterceptor.java:90)
+	at com.follett.fsc.jbosshelper.ejb3.UserContextEJB3ServerInterceptor.invokeNext(UserContextEJB3ServerInterceptor.java:56)
+	at com.follett.fsc.jbosshelper.ejb3.UserContextEJB3ServerInterceptor.invoke(UserContextEJB3ServerInterceptor.java:41)
+	at org.jboss.aop.joinpoint.MethodInvocation.invokeNext(MethodInvocation.java:101)
+	at org.jboss.aspects.security.AuthenticationInterceptor.invoke(AuthenticationInterceptor.java:77)
+	at org.jboss.ejb3.security.Ejb3AuthenticationInterceptor.invoke(Ejb3AuthenticationInterceptor.java:110)
+	at org.jboss.aop.joinpoint.MethodInvocation.invokeNext(MethodInvocation.java:101)
+	at org.jboss.ejb3.ENCPropagationInterceptor.invoke(ENCPropagationInterceptor.java:46)
+	at org.jboss.aop.joinpoint.MethodInvocation.invokeNext(MethodInvocation.java:101)
+	at org.jboss.ejb3.asynchronous.AsynchronousInterceptor.invoke(AsynchronousInterceptor.java:106)
+	at org.jboss.aop.joinpoint.MethodInvocation.invokeNext(MethodInvocation.java:101)
+	at org.jboss.ejb3.stateless.StatelessContainer.localInvoke(StatelessContainer.java:240)
+	at org.jboss.ejb3.stateless.StatelessContainer.localInvoke(StatelessContainer.java:210)
+	at org.jboss.ejb3.stateless.StatelessLocalProxy.invoke(StatelessLocalProxy.java:84)
+	at $Proxy800.synchronizeFollettEBooks(Unknown Source)
+	at com.follett.fsc.destiny.session.common.churchill.SyncFollettEBooksJoblet.run(SourceFile:49)
+	at com.follett.fsc.churchill.ChurchillJoblet.doRunCycle(ChurchillJoblet.java:134)
+	at com.follett.fsc.churchill.JobletManager$LauncherRunnable.run(JobletManager.java:406)
+	at java.util.concurrent.Executors$RunnableAdapter.call(Executors.java:441)
+	at java.util.concurrent.FutureTask$Sync.innerRun(FutureTask.java:303)
+	at java.util.concurrent.FutureTask.run(FutureTask.java:138)
+	at java.util.concurrent.ThreadPoolExecutor$Worker.runTask(ThreadPoolExecutor.java:886)
+	at java.util.concurrent.ThreadPoolExecutor$Worker.run(ThreadPoolExecutor.java:908)
+	at java.lang.Thread.run(Thread.java:619)
+Caused by: java.net.UnknownHostException: ${PROXY_HOST}
+	at java.net.PlainSocketImpl.connect(PlainSocketImpl.java:177)
+	at java.net.SocksSocketImpl.connect(SocksSocketImpl.java:366)
+	at java.net.Socket.connect(Socket.java:519)
+	at java.net.Socket.connect(Socket.java:469)
+	at java.net.Socket.<init>(Socket.java:366)
+	at java.net.Socket.<init>(Socket.java:240)
+	at org.apache.commons.httpclient.protocol.DefaultProtocolSocketFactory.createSocket(Unknown Source)
+	at org.apache.commons.httpclient.protocol.ControllerThreadSocketFactory$1.doit(Unknown Source)
+	at org.apache.commons.httpclient.protocol.ControllerThreadSocketFactory$SocketTask.run(Unknown Source)
+	... 1 more
+
+---ROOT EXCEPTION IS AS FOLLOWS---
+
+java.net.UnknownHostException: ${PROXY_HOST}
+	at java.net.PlainSocketImpl.connect(PlainSocketImpl.java:177)
+	at java.net.SocksSocketImpl.connect(SocksSocketImpl.java:366)
+	at java.net.Socket.connect(Socket.java:519)
+	at java.net.Socket.connect(Socket.java:469)
+	at java.net.Socket.<init>(Socket.java:366)
+	at java.net.Socket.<init>(Socket.java:240)
+	at org.apache.commons.httpclient.protocol.DefaultProtocolSocketFactory.createSocket(Unknown Source)
+	at org.apache.commons.httpclient.protocol.ControllerThreadSocketFactory$1.doit(Unknown Source)
+	at org.apache.commons.httpclient.protocol.ControllerThreadSocketFactory$SocketTask.run(Unknown Source)
+	at java.lang.Thread.run(Thread.java:619)
+
+2011-11-03 14:12:00	WARN 	DestinyHttpClient	( Joblet: com.follett.fsc.destiny.session.common.churchill.SyncFollettEBooksJoblet)	Unknown proxy port ${PROXY_PORT} default to 8080
+2011-11-03 14:12:00	WARN 	URLHelper	( Joblet: com.follett.fsc.destiny.session.common.churchill.SyncFollettEBooksJoblet)	Unknown proxy port ${PROXY_PORT} default to 8080
+2011-11-03 14:12:00	WARN 	URLHelper	( Joblet: com.follett.fsc.destiny.session.common.churchill.SyncFollettEBooksJoblet)	Failed to connect to server. trying again.

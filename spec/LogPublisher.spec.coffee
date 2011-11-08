@@ -59,7 +59,7 @@ describe "LogPublisher", ->
       runUntil (done)->
         expect(onConnectArgs).toEqual [undefined]
         done()
-
+  
   describe ".log([], callback)", ->
 
     it "calls callback with error, when passed non-Array", ->
@@ -92,7 +92,7 @@ describe "LogPublisher", ->
 
     it 'logs multiple log entries', ->
       runUntil (done)->
-        logs = for i in [0...5]
+        logs = for i in [0...2001]
           mocklog
             date: Date.now()+1000*i
             clientInfo:
@@ -103,17 +103,41 @@ describe "LogPublisher", ->
           $M = db.multi()
           $M.get "nextlogid"
           for log,i in logs
-            $M.hgetall "log:#{i}"
+            bucket = ~~(i/1000)
+            minor = i % 1000
+
+            $M.hmget "logs:#{bucket}",
+              "#{minor}:date"
+              "#{minor}:context"
+              "#{minor}:category"
+              "#{minor}:codeSource"
+              "#{minor}:msg"
+              "#{minor}:ci_ip"
+              "#{minor}:ci_id"
+              "#{minor}:ci_siteid"
+              "#{minor}:ci_userid"
+
             $M.zscore "context:#{context}", "#{i}"
             $M.zscore "context_ip:#{context}:#{log.clientInfo.ip}", "#{i}"
             $M.zscore "ip:#{log.clientInfo.ip}", "#{i}"
             $M.zscore "all", "#{i}"
+          
           $M.exec (err,data)->
             try
-              exp = ['5']
+              exp = ['2001']
               for log,i in logs
+                exp.push [
+                  log.date.toString()
+                  context
+                  log.category
+                  log.codeSource
+                  log.msg
+                  log.clientInfo.ip
+                  log.clientInfo.id.toString()
+                  log.clientInfo.siteid.toString()
+                  log.clientInfo.userid.toString()
+                ]
                 exp = exp.concat [
-                  toHash log, i, context
                   "#{log.date*1000}"
                   "#{log.date*1000}"
                   "#{log.date*1000}"
@@ -123,37 +147,37 @@ describe "LogPublisher", ->
             finally
               done()
 
-
   describe ".end()", ->
     it "closes connection, log() sends error to callbacks", ->
       lp.end()
       lp.log mocklog(), (e)->
         expect(e).toBe "Connection closed"
 
-
   describe "._toHash()", ->
 
     it "hashes full Log Entry", ->
       l = mocklog()
-      expect(lp._toHash l).toEqual
-        msg: l.msg
-        date: l.date
-        category: l.category
-        codeSource: l.codeSource
-        ci_ip: l.clientInfo.ip
-        ci_id: l.clientInfo.id
-        ci_siteid: l.clientInfo.siteid
-        ci_userid: l.clientInfo.userid
+      expect(lp._toHash(l, 10, 'testContext')).toEqual
+        '10:context': 'testContext'
+        '10:msg': l.msg
+        '10:date': l.date
+        '10:category': l.category
+        '10:codeSource': l.codeSource
+        '10:ci_ip': l.clientInfo.ip
+        '10:ci_id': l.clientInfo.id
+        '10:ci_siteid': l.clientInfo.siteid
+        '10:ci_userid': l.clientInfo.userid
 
 
     it "hashes Log Entry with NO client info", ->
       l = mocklog()
       delete l.clientInfo
-      expect(lp._toHash(l)).toEqual
-        msg: l.msg
-        date: l.date
-        category: l.category
-        codeSource: l.codeSource
+      expect(lp._toHash(l, 5, 'testContext')).toEqual
+        '5:context': 'testContext'
+        '5:msg': l.msg
+        '5:date': l.date
+        '5:category': l.category
+        '5:codeSource': l.codeSource
 
 
   describe "._saltDate(date)", ->
@@ -172,7 +196,6 @@ describe "LogPublisher", ->
       expect(lp._saltDate 2).toBe 2000
       expect(lp._saltDate 2).toBe 2001
       expect(lp._saltDate 3).toBe 3000
-
 
   it "MOCK REDIS TEARDOWN", ->
     if db

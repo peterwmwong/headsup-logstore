@@ -2,6 +2,7 @@
 {EventEmitter} = require 'events'
 redis = require 'redis'
 
+
 LogStore = (opts)->
   {port,host,dbid} = opts or {}
 
@@ -15,6 +16,8 @@ LogStore = (opts)->
   this
 
 inherits LogStore, EventEmitter
+
+LogStore.DEFAULT_LIMIT = (DEFAULT_LIMIT = 50)
 
 LogStore::[k]=v for k,v of do->
 
@@ -36,7 +39,7 @@ LogStore::[k]=v for k,v of do->
         @_get filterBy, limit, 0, cb
 
   _get: (filterBy, limit, startrank, cb)->
-    limit = if limit? and limit < 25 then limit else 25
+    limit = if limit? and limit < DEFAULT_LIMIT then limit else DEFAULT_LIMIT
     zset =
       if not filterBy then "all"
       else
@@ -52,28 +55,40 @@ LogStore::[k]=v for k,v of do->
         else
           $M = @_db.multi()
           for id in ids
-            $M.hgetall "log:#{id}"
+            minor = id % 1000
+            bucket = ~~(id/1000)
+            $M.hmget "logs:#{bucket}",
+              "#{minor}:date"
+              "#{minor}:context"
+              "#{minor}:category"
+              "#{minor}:codeSource"
+              "#{minor}:msg"
+              "#{minor}:ci_ip"
+              "#{minor}:ci_id"
+              "#{minor}:ci_siteid"
+              "#{minor}:ci_userid"
+
           $M.exec (err,logs)=>
             if err then cb err
             else
-              for log,i in logs then logs[i] = @_toLog log
+              for log,i in logs then logs[i] = @_toLog log, ids[i]
               cb undefined, logs
 
-  _toLog: (e)->
+  _toLog: (e, id)->
     rtn =
-      id: Number e.id
-      context: e.context
-      msg: e.msg
-      date: Number e.date
-      category: e.category
-      codeSource: e.codeSource
+      id: Number id
+      date: Number e[0]
+      context: e[1]
+      category: e[2]
+      codeSource: e[3]
+      msg: e[4]
 
-    if e.ci_ip or e.ci_id or e.ci_siteid or e.ci_userid
-      rtn.clientInfo =
-        ip: e.ci_ip
-        id: e.ci_id
-        siteid: e.ci_siteid
-        userid: e.ci_userid
+    if e[5] or e[6] or e[7] or e[8]
+      rtn.clientInfo = ci = {}
+      ci.ip = e[5] if e[5]
+      ci.id = e[6] if e[6]
+      ci.siteid = e[7] if e[7]
+      ci.userid = e[8] if e[8]
     rtn
 
 module.exports = LogStore

@@ -8,7 +8,7 @@ if isWindows() and (not process.env.TEST_REDIS_HOST or not process.env.TEST_REDI
   throw "Windows: Cannot run LogStore.spec without an external redis-server host and port specified (TEST_REDIS_HOST, TEST_REDIS_PORT)"
 
 L = console.log.bind console
-DEFAULT_COUNT = 25
+DEFAULT_LIMIT = LogStore.DEFAULT_LIMIT
 
 describe "LogStore", ->
   ls = null
@@ -66,27 +66,26 @@ describe "LogStore", ->
       runs -> lp.log mlogs
       waitsFor -> logsReceived >= 3
 
-
   describe ".get({},callback)", ->
     mlogs = null
 
-    it "returns last #{DEFAULT_COUNT} log entries", ->
+    it "returns last #{DEFAULT_LIMIT} log entries", ->
       lp = new LogPublisher context:'test', host:mockRedis.host, port:mockRedis.port, dbid: curdbid
       @after -> lp.end()
-      mlogs = (mocklog(date: Date.now()+1000*i) for i in [0..DEFAULT_COUNT+5])
+      mlogs = (mocklog(date: Date.now()+1000*i) for i in [0..DEFAULT_LIMIT+5])
 
       received = undefined
       runUntil (done)-> lp.log mlogs, done
       runs -> ls.get {}, (err, entries)-> received = entries
       waitsFor -> received
       runs -> expect(received).toEqual do->
-        for l in mlogs.reverse().slice(0,DEFAULT_COUNT)
+        for l in mlogs.reverse().slice(0,DEFAULT_LIMIT)
           addIdContext l, l.id, 'test'
 
-    it "returns last X log entries, if X < #{DEFAULT_COUNT}", ->
+    it "returns last X log entries, if X < #{DEFAULT_LIMIT}", ->
       lp = new LogPublisher context:'test', host:mockRedis.host, port:mockRedis.port, dbid: curdbid
       @after -> lp.end()
-      mlogs = (mocklog(date: Date.now()+1000*i) for i in [0...3])
+      mlogs = (mocklog(date: Date.now()+1000*i) for i in [0...(DEFAULT_LIMIT-1)])
 
       received = undefined
       runUntil (done)-> lp.log mlogs, done
@@ -96,10 +95,9 @@ describe "LogStore", ->
         for l in mlogs.reverse()
           addIdContext l, l.id, 'test'
 
-
   describe ".get({filterBy: {context}})", ->
 
-    it "returns last #{DEFAULT_COUNT} log entries, from specified context", ->
+    it "returns last #{DEFAULT_LIMIT} log entries, from specified context", ->
       lpOne = new LogPublisher context:'one', host:mockRedis.host, port:mockRedis.port, dbid: curdbid
       lpTwo = new LogPublisher context:'two', host:mockRedis.host, port:mockRedis.port, dbid: curdbid
       @after -> lp.end() for lp in [lpOne, lpTwo]
@@ -116,10 +114,10 @@ describe "LogStore", ->
       waitsFor -> receivedOne and receivedTwo
       runs ->
         expect(receivedOne).toEqual do->
-          for l in oneLogs.reverse().slice(0,DEFAULT_COUNT)
+          for l in oneLogs.reverse().slice(0,DEFAULT_LIMIT)
             addIdContext l, l.id, 'one'
         expect(receivedTwo).toEqual do->
-          for l in twoLogs.reverse().slice(0,DEFAULT_COUNT)
+          for l in twoLogs.reverse().slice(0,DEFAULT_LIMIT)
             addIdContext l, l.id, 'two'
 
 
@@ -143,7 +141,7 @@ describe "LogStore", ->
           expect(entries).toEqual []
           done()
 
-    it "returns last #{DEFAULT_COUNT} log entries, from specified clientip", ->
+    it "returns last #{DEFAULT_LIMIT} log entries, from specified clientip", ->
       runUntil (done)->
         ls.get {filterBy:{clientip:'1'}}, (err,entries)->
           expect(entries).toEqual [
@@ -169,7 +167,7 @@ describe "LogStore", ->
           expect(err).toEqual "Start log id 100 doesn't exist"
           done()
 
-    it "returns last #{DEFAULT_COUNT} log entries, starting with logid of {start}", ->
+    it "returns last #{DEFAULT_LIMIT} log entries, starting with logid of {start}", ->
       runUntil (done)->
         ls.get {start: 2}, (err, entries)->
           expect(err).toBe undefined
@@ -180,34 +178,35 @@ describe "LogStore", ->
           done()
 
 
-  describe "._toLog(hash)", ->
+  describe "._toLog([],id)", ->
     it "converts hash to Log Entry", ->
       l = mocklog()
       l.id = 77
-      hash = 
-        id: "#{l.id}"
-        msg: l.msg
-        date: l.date
-        category: l.category
-        codeSource: l.codeSource
-        ci_ip: l.clientInfo.ip
-        ci_id: l.clientInfo.id
-        ci_siteid: l.clientInfo.siteid
-        ci_userid: l.clientInfo.userid
-      expect(ls._toLog hash).toEqual l
+      data = [
+        l.date
+        l.context
+        l.category
+        l.codeSource
+        l.msg
+        l.clientInfo.ip
+        l.clientInfo.id
+        l.clientInfo.siteid
+        l.clientInfo.userid
+      ]
+      expect(ls._toLog data, l.id).toEqual l
 
     it "doesn't add clientInfo if ci_ip, ci_id, ci_siteid, or ci_userid or present", ->
       l = mocklog()
       l.id = 88
       delete l.clientInfo
-      hash = 
-        id: "#{l.id}"
-        msg: l.msg
-        date: l.date
-        category: l.category
-        codeSource: l.codeSource
-      expect(ls._toLog hash).toEqual l
-
+      data = [
+        l.date
+        l.context
+        l.category
+        l.codeSource
+        l.msg
+      ]
+      expect(ls._toLog data, 88).toEqual l
 
   it "MOCK REDIS TEARDOWN", ->
     if db

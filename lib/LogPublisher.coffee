@@ -47,33 +47,30 @@ LogPublisher.prototype =
     if @_checkConn cb
       if not (entries instanceof Array) then cb "Log entries must be an Array"
       else
-        logs = []
-        hashes = for el in entries when el and typeof el is 'object'
-          logs.push el
-          @_toHash el
-        numFailed = entries.length - hashes.length
+        logs = (el for el in entries when el and typeof el is 'object')
+        numFailed = entries.length - logs.length
 
         # No worthy log entries
-        if hashes.length is 0
+        if logs.length is 0
           if numFailed then cb {numFailed}
           else cb()
 
         else
-          # Reserve X number of log ids (X = hashes.length)
-          @_db.incrby "nextlogid", hashes.length, (e,logid)=>
-            logid = logid - hashes.length
+          # Reserve X number of log ids (X = logs.length)
+          @_db.incrby "nextlogid", logs.length, (e,logid)=>
+            startlogid = logid - logs.length
+            
             $M = @_db.multi()
+            for l,i in logs
+              logid = startlogid + i
+              minor = logid % 1000
+              bucket = ~~(logid / 1000)
+              l.id = logid
+              l.context = @context
 
-            for h,id in hashes
-              h.id = logs[id].id = logid
-              h.context = logs[id].context = @context
-              newh = {}
-              for k,v of h
-                newh["#{logid}#{k}"] = v
-
-              $M.hmset "logs", newh
-              $M.zadd "context:#{@context}", (sdate = @_saltDate(h.date)), logid
-              if ip = h.ci_ip
+              $M.hmset "logs:#{bucket}", (@_toHash l, minor, @context)
+              $M.zadd "context:#{@context}", (sdate = @_saltDate(l.date)), logid
+              if ip = l.clientInfo?.ip
                 $M.zadd "ip:#{ip}", sdate, logid
                 $M.zadd "context_ip:#{@context}:#{ip}", sdate, logid
               $M.zadd "all", sdate, logid
@@ -91,18 +88,19 @@ LogPublisher.prototype =
     else
       true
 
-  _toHash: (e)->
-    hash =
-      date: e.date
-      category: e.category
-      codeSource: e.codeSource
-      msg: e.msg
+  _toHash: (e,id,ctx)->
+    hash = {}
+    hash["#{id}:context"] = ctx
+    hash["#{id}:date"] = e.date
+    hash["#{id}:category"] = e.category
+    hash["#{id}:codeSource"] = e.codeSource
+    hash["#{id}:msg"] = e.msg
 
     if ci = e.clientInfo
-      hash.ci_ip = ci.ip if ci.ip
-      hash.ci_id = ci.id if ci.id
-      hash.ci_siteid = ci.siteid if ci.siteid
-      hash.ci_userid = ci.userid if ci.userid
+      hash["#{id}:ci_ip"] = ci.ip if ci.ip
+      hash["#{id}:ci_id"] = ci.id if ci.id
+      hash["#{id}:ci_siteid"] = ci.siteid if ci.siteid
+      hash["#{id}:ci_userid"] = ci.userid if ci.userid
 
     hash
 

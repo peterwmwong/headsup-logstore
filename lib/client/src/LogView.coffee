@@ -4,11 +4,11 @@ define [
   _ = cell::$R
 
   machineMap =
-    test: 'http://www.google.com'
     test1: 'http://destiny-test1'
     test2: 'http://destiny-test2'
     test3b: 'http://destiny-test3b'
-    test4b: 'http://destiny-test4b'
+    test5b: 'http://destiny-test5b'
+    test6: 'http://destiny-test6'
     sc: 'http://destinysc'
     '10-0vm': 'http://destiny10-0vm'
     'stage': 'http://172.31.223.245'
@@ -37,8 +37,8 @@ define [
 
   renderLogs = (logs)->
     for l in logs
-      _ "<div class='log' data-logid='#{l.id}'>",
-        _ "<a class='context' #{(url = machineMap[l.context]) and "href='http://#{url}' or ''"}>", l.context
+      _ "<div class='log #{l.category}' data-logid='#{l.id}'>",
+        _ "<a class='context' #{(url = machineMap[l.context]) and "href='#{url}' target='_blank'" or ''}>", l.context
         _ 'p.ip', l.clientInfo?.ip or ''
         _ 'p.date', l.date and formatDate l.date or ''
         _ 'p.siteid', l.clientInfo?.siteid or ''
@@ -49,4 +49,5 @@ define [
     $el = @$el
     Bus.on 'log', (logs)=>
       $el.append renderLogs logs
+      console.log $(window).scrollTop(), $el.height()
       $(window).scrollTop $el.height()

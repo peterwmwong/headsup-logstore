@@ -14,7 +14,7 @@ io = require('socket.io').listen server
 io.enable 'browser client minification'
 io.enable 'browser client etag'
 io.enable 'browser client gzip'
-io.set 'log level', 3
+io.set 'log level', 1
 io.set 'origins', '*:*'
 io.set 'transports', [
   'websocket'
@@ -33,9 +33,9 @@ io.sockets.on 'connection', (socket)->
 lsConfig =
   host: process.argv[2] or '127.0.0.1'
   port: process.argv[3] or '6379'
-  dbid: process.argv[4] or '1'
+  dbid: process.argv[4] or '0'
 
 console.log "Connecting to LogStore @ #{lsConfig.host}:#{lsConfig.port} DBID=#{lsConfig.dbid}..."
 new LogStore(lsConfig).on 'log', (log)->
-  console.log "SERVER:", log
+  console.log log
   io.sockets.emit 'log', log

@@ -63,6 +63,7 @@ LogStore::[k]=v for k,v of do->
               "#{minor}:category"
               "#{minor}:codeSource"
               "#{minor}:msg"
+              "#{minor}:ci_district"
               "#{minor}:ci_ip"
               "#{minor}:ci_id"
               "#{minor}:ci_siteid"
@@ -83,12 +84,13 @@ LogStore::[k]=v for k,v of do->
       codeSource: e[3]
       msg: e[4]
 
-    if e[5] or e[6] or e[7] or e[8]
+    if e[5] or e[6] or e[7] or e[8] or e[9]
       rtn.clientInfo = ci = {}
-      ci.ip = e[5] if e[5]
-      ci.id = e[6] if e[6]
-      ci.siteid = e[7] if e[7]
-      ci.userid = e[8] if e[8]
+      ci.district = e[5] if e[5]
+      ci.ip = e[6] if e[6]
+      ci.id = e[7] if e[7]
+      ci.siteid = e[8] if e[8]
+      ci.userid = e[9] if e[9]
     rtn
 
 module.exports = LogStore

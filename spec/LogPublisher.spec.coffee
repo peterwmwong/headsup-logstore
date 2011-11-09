@@ -1,7 +1,7 @@
 LogStore = require '../lib/LogStore'
 LogPublisher = require '../lib/LogPublisher'
 MockRedis = require './util/MockRedis'
-{isWindows,mocklog,runUntil,toHash,randint} = require './util/SpecHelpers'
+{isWindows,mocklog,runUntil,randint} = require './util/SpecHelpers'
 redis = require 'redis'
 
 L = console.log.bind console
@@ -113,6 +113,7 @@ describe "LogPublisher", ->
               "#{minor}:codeSource"
               "#{minor}:msg"
               "#{minor}:ci_ip"
+              "#{minor}:ci_district"
               "#{minor}:ci_id"
               "#{minor}:ci_siteid"
               "#{minor}:ci_userid"
@@ -133,6 +134,7 @@ describe "LogPublisher", ->
                   log.codeSource
                   log.msg
                   log.clientInfo.ip
+                  log.clientInfo.district
                   log.clientInfo.id.toString()
                   log.clientInfo.siteid.toString()
                   log.clientInfo.userid.toString()
@@ -163,6 +165,7 @@ describe "LogPublisher", ->
         '10:date': l.date
         '10:category': l.category
         '10:codeSource': l.codeSource
+        '10:ci_district': l.clientInfo.district
         '10:ci_ip': l.clientInfo.ip
         '10:ci_id': l.clientInfo.id
         '10:ci_siteid': l.clientInfo.siteid

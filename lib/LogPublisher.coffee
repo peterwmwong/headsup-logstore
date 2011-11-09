@@ -97,6 +97,7 @@ LogPublisher.prototype =
     hash["#{id}:msg"] = e.msg
 
     if ci = e.clientInfo
+      hash["#{id}:ci_district"] = ci.district if ci.district
       hash["#{id}:ci_ip"] = ci.ip if ci.ip
       hash["#{id}:ci_id"] = ci.id if ci.id
       hash["#{id}:ci_siteid"] = ci.siteid if ci.siteid

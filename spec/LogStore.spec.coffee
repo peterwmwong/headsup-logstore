@@ -188,6 +188,7 @@ describe "LogStore", ->
         l.category
         l.codeSource
         l.msg
+        l.clientInfo.district
         l.clientInfo.ip
         l.clientInfo.id
         l.clientInfo.siteid

@@ -116,4 +116,4 @@ define ->
         if ls = @_ls[type]
           for l,i in ls when l is handler
             delete ls[i]
-            return
+      return

@@ -1,4 +1,4 @@
-ciregex = /([^ ]*) (Context:(\w+) )?(ID:(\d*)( siteID:(\d*)( userID:(\d*))?)?)/
+ciregex = /([^ ]*) (Context:(\w+)[ ]+)?(ID:(\d*)( siteID:(\d*)( userID:(\d*))?)?)/
 leregex = /^(\d\d\d\d)-(\d\d)-(\d\d)\s+(\d\d):(\d\d):(\d\d)\s+(\w*)\s+(\w*)\s+[(]([^)]*)[)]\s*(.*)\s*/
 
 module.exports =

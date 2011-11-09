@@ -96,7 +96,7 @@ define ['SpecHelpers'], ({spyOnAll})->
           hChild?.reset()
 
         beforeEach ->
-          model.onAndCall {'change:root':hRoot,'change:root.parent':hParent,'change:root.parent.child':hChild} =
+          model.onAndCall {'change:root':hRoot,'change:root.parent':hParent,'change:root.parent.child':hChild} = do->
             spyOnAll
               'change:root': ->
               'change:root.parent': ->

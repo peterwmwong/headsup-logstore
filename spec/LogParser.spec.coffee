@@ -42,18 +42,18 @@ describe 'LogParser', ->
         msg: 'Initialization processed in 422 ms'
 
     it 'parses full Log Entry with district client info', ->
-      entry = '2010-10-12 08:41:31\tINFO\tCatalina\t(127.0.0.1 Context:blargContext ID:2 siteID:10 userID:101)\t Initialization processed in 422 ms'
+      entry = '2011-11-09\t12:15:12\tINFO\trequest\t(172.16.19.63 Context:noblesville  ID:1 siteID:101 userID:102)\t 110 (SQL=31)  /cataloging/servlet/presentadvancedsearchredirectorform.do?tm=TopLevelCatalog&l2m=Library+Search'
       expect(parse entry).toEqual
-        date: new Date(2010, 10, 12, 8, 41, 31).getTime()
+        date: new Date(2011, 11, 9, 12, 15, 12).getTime()
         category: 'INFO'
-        codeSource: 'Catalina'
+        codeSource: 'request'
         clientInfo:
-          ip: '127.0.0.1'
-          id: '2'
-          siteid: '10'
-          userid: '101'
-          district: 'blargContext'
-        msg: 'Initialization processed in 422 ms'
+          ip: '172.16.19.63'
+          id: '1'
+          siteid: '101'
+          userid: '102'
+          district: 'noblesville'
+        msg: '110 (SQL=31)  /cataloging/servlet/presentadvancedsearchredirectorform.do?tm=TopLevelCatalog&l2m=Library+Search'
 
     it 'parses Log Entry with NO clientInfo', ->
       entry = '2010-10-12 08:41:31\tINFO\tCatalina\t()\t Initialization processed in 422 ms'
@@ -86,12 +86,12 @@ describe 'LogParser', ->
         siteid: '9'
       
     it 'parses full Client Info with district', ->
-      expect(parseClientInfo '127.0.0.1 Context:blargContext ID:10 siteID:9 userID:8').toEqual
-        ip: '127.0.0.1'
-        id: '10'
-        siteid: '9'
-        userid: '8'
-        district: 'blargContext'
+      expect(parseClientInfo '172.16.19.63 Context:noblesville  ID:1 siteID:101 userID:102').toEqual
+        ip: '172.16.19.63'
+        id: '1'
+        siteid: '101'
+        userid: '102'
+        district: 'noblesville'
 
     it 'parses full Client Info with district, but NO userID', ->
       expect(parseClientInfo '127.0.0.1 Context:blargContext2 ID:10 siteID:9').toEqual

@@ -48,6 +48,16 @@ define [
   afterRender: ->
     $el = @$el
     Bus.on 'log', (logs)=>
+      before = $(window).scrollTop()
+      $(window).scrollTop $(window).scrollTop()+1
+      after = $(window).scrollTop()
+
       $el.append renderLogs logs
-      console.log $(window).scrollTop(), $el.height()
-      $(window).scrollTop $el.height()
+
+      # Don't touch that scroll bar!
+      if before isnt after
+        $(window).scrollTop before
+        
+      # Scrolled to all the way to the bottom? Auto-Scroll!
+      else
+        $(window).scrollTop $el.height()

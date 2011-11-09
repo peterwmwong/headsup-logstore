@@ -37,5 +37,4 @@ lsConfig =
 
 console.log "Connecting to LogStore @ #{lsConfig.host}:#{lsConfig.port} DBID=#{lsConfig.dbid}..."
 new LogStore(lsConfig).on 'log', (log)->
-  console.log log
   io.sockets.emit 'log', log

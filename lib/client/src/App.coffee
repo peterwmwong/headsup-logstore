@@ -1,9 +1,7 @@
 define [
-  'Bus'
   'cell!LogView'
   'cell!Header'
-], (Bus,LogView,Header)->
-  _ = cell::$R
+], (LogView,Header)->
 
   render: (_)-> [
     _ Header

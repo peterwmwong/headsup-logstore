@@ -42,6 +42,7 @@ define [
         _ 'p.ip', l.clientInfo?.ip or ''
         _ 'p.date', l.date and formatDate l.date or ''
         _ 'p.siteid', l.clientInfo?.siteid or ''
+        _ 'p.district', if l.clientInfo?.district then "(#{l.clientInfo.district})" else ''
         _ 'p.cat', l.category
         _ '.msg', l.msg
     

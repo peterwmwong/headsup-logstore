@@ -1,4 +1,4 @@
-ciregex = /([^ ]*) (ID:(\d*)( siteID:(\d*)( userID:(\d*))?)?)/
+ciregex = /([^ ]*) (Context:(\w+) )?(ID:(\d*)( siteID:(\d*)( userID:(\d*))?)?)/
 leregex = /^(\d\d\d\d)-(\d\d)-(\d\d)\s+(\d\d):(\d\d):(\d\d)\s+(\w*)\s+(\w*)\s+[(]([^)]*)[)]\s*(.*)\s*/
 
 module.exports =
@@ -6,9 +6,10 @@ module.exports =
   parseClientInfo: parseClientInfo = (line)->
     if (p = ciregex.exec line)
       ip: p[1]
-      id: p[3]
-      siteid: p[5]
-      userid: p[7]
+      district: p[3]
+      id: p[5]
+      siteid: p[7]
+      userid: p[9]
 
   parse: (line,ctx)->
     if (p = leregex.exec line)

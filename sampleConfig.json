@@ -1,0 +1,6 @@
+{
+	"context":"test",
+	"redis_host":"172.16.19.148",
+	"redis_port":"6379",
+	"redis_dbid":0
+}

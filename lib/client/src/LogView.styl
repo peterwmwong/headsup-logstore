@@ -8,7 +8,7 @@
   font-weight normal
 
   > .log
-    padding 0px 5px 0px 5px
+    padding 0px 5px 2px 5px
     width 100%
     box-sizing border-box
     white-space nowrap
@@ -16,17 +16,25 @@
     log-line-height = 14px
 
     &:hover
-      background-color #1D1D1D
-      > p, > a, > div
+      background-color #222
+      > *
         color log-text-color-hover
     
     &.WARN
+      &:hover
+        background-color #332D12
+        > p, > a, > div
+          color #C8AE44
       > .context, > .date, > .siteid, > .district, > .cat, > .ip
         color #665923
       > .msg
         color #C8AE44
     
     &.ERROR
+      &:hover
+        background-color #401313
+        > p, > a, > div
+          color #BD3737
       > .context, > .date, > .siteid, > .district, > .cat, > .ip
         color #732121
       > .msg

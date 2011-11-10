@@ -4,11 +4,15 @@ h1,h2,h3,h4,h5{margin:0;padding:0}
 .App > .LogView{padding-top:25px;padding-bottom:5px;width:100%}
 @import url("http://fonts.googleapis.com/css?family=Inconsolata");
 .LogView{font-size:16px;font-family:"Inconsolata",sans-serif;font-weight:normal;}
-.LogView > .log{padding:0 5px 0 5px;width:100%;box-sizing:border-box;-moz-box-sizing:border-box;-webkit-box-sizing:border-box;white-space:nowrap;}
-.LogView > .log:hover{background-color:#1d1d1d;}
-.LogView > .log:hover > p,.LogView > .log:hover > a,.LogView > .log:hover > div{color:#888}
+.LogView > .log{padding:0 5px 2px 5px;width:100%;box-sizing:border-box;-moz-box-sizing:border-box;-webkit-box-sizing:border-box;white-space:nowrap;}
+.LogView > .log:hover{background-color:#222;}
+.LogView > .log:hover > *{color:#888}
+.LogView > .log.WARN:hover{background-color:#332d12;}
+.LogView > .log.WARN:hover > p,.LogView > .log.WARN:hover > a,.LogView > .log.WARN:hover > div{color:#c8ae44}
 .LogView > .log.WARN > .context,.LogView > .log.WARN > .date,.LogView > .log.WARN > .siteid,.LogView > .log.WARN > .district,.LogView > .log.WARN > .cat,.LogView > .log.WARN > .ip{color:#665923}
 .LogView > .log.WARN > .msg{color:#c8ae44}
+.LogView > .log.ERROR:hover{background-color:#401313;}
+.LogView > .log.ERROR:hover > p,.LogView > .log.ERROR:hover > a,.LogView > .log.ERROR:hover > div{color:#bd3737}
 .LogView > .log.ERROR > .context,.LogView > .log.ERROR > .date,.LogView > .log.ERROR > .siteid,.LogView > .log.ERROR > .district,.LogView > .log.ERROR > .cat,.LogView > .log.ERROR > .ip{color:#732121}
 .LogView > .log.ERROR > .msg{color:#bd3737}
 .LogView > .log > .context,.LogView > .log > .date,.LogView > .log > .siteid,.LogView > .log > .district,.LogView > .log > .cat,.LogView > .log > .ip{color:#444;margin:0 10px 0 2px;line-height:14px;vertical-align:middle;display:inline-block}

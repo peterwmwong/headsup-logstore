@@ -115,7 +115,7 @@ describe "FileWatcher", ->
         setTimeout (->
           ws = fs.createWriteStream file, flags: 'a'
           ws.end "TEST DATA 1\nTEST DATA 2\n"
-        ), 10
+        ), 100
 
         setTimeout (->
           #TODO:
@@ -178,12 +178,12 @@ describe "FileWatcher", ->
           watcherPoll.unwatch()
           watcher = undefined
           watcherPoll = undefined
-        ), 50
+        ), 250
         setTimeout (->
           ws = fs.createWriteStream file, flags: 'w'
           ws.end "TEST DATA 6\nTEST DATA 7\n"
           done = true
-        ), 100
+        ), 500
       waitsFor -> done
       runs ->
         expect(received_err).toEqual []

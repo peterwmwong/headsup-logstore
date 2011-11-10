@@ -3,6 +3,7 @@ fs = require 'fs'
 util = require 'util'
 
 newlineRx = /\r?\n/
+pollInterval = 100
 
 module.exports =
 
@@ -48,12 +49,12 @@ module.exports =
               poll = ->
                 if not unwatch
                   fs.stat file, (err,cur)-> if err then cb err else
-                    if (prev.size isnt cur.size) or (prev.mtime.getTime() isnt cur.mtime.getTime())
+                    if (cur.size > 0) and ((prev.size isnt cur.size) or (prev.mtime.getTime() isnt cur.mtime.getTime()))
                       handleChange cur, (err,lines)->
                         cb err, lines
-                        setTimeout poll, 10
+                        setTimeout poll, pollInterval
                     else
-                      setTimeout poll, 10
+                      setTimeout poll, pollInterval
               poll()
 
             else

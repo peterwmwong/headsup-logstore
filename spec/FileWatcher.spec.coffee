@@ -115,7 +115,7 @@ describe "FileWatcher", ->
         setTimeout (->
           ws = fs.createWriteStream file, flags: 'a'
           ws.end "TEST DATA 1\nTEST DATA 2\n"
-        ), 100
+        ), 1000
 
         setTimeout (->
           #TODO:
@@ -128,7 +128,7 @@ describe "FileWatcher", ->
             ws.end "TEST DATA 6\nTEST DATA 7\n"
           else
             fs.writeFileSync file, "TEST DATA 6\nTEST DATA 7\n"
-        ), 1000
+        ), 2000
 
       waitsFor -> (received.length >= 4) and (receivedPoll.length >= 4)
       runs ->

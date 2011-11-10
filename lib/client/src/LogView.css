@@ -1,5 +1,5 @@
 @import url("http://fonts.googleapis.com/css?family=Inconsolata");
-.LogView{font-size:16px;font-family:"Inconsolata",sans-serif;font-weight:normal;}
+.LogView{font-size:16px;font-family:'Inconsolata',sans-serif;font-weight:normal;}
 .LogView > .log{padding:0 5px 0 5px;width:100%;box-sizing:border-box;-moz-box-sizing:border-box;-webkit-box-sizing:border-box;white-space:nowrap;}
 .LogView > .log:hover{background-color:#1d1d1d;}
 .LogView > .log:hover > p,.LogView > .log:hover > a,.LogView > .log:hover > div{color:#888}

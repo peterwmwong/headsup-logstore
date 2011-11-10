@@ -18,19 +18,30 @@ describe "FileWatcher", ->
     file = undefined
     received_err = []
     received = []
+    receivedPoll_err = []
+    receivedPoll = []
     watcher = undefined
+    watcherPoll = undefined
 
     beforeEach ->
       file = path.resolve "#{process.env.TEMP or '/tmp'}/FileWatcher-spec-#{Date.now()}.txt"
       received_err = []
       received = []
+      receivedPoll_err = []
+      receivedPoll = []
       fs.writeFileSync file, ''
       watcher = FileWatcher.watch file, (err, data)->
-        try received_err.concat err
-        try received = received.concat data
+        received = received.concat data
+        if err?
+          received_err = received_err.concat err
+      watcherPoll = FileWatcher.watch file, {poll:true}, (err, data)->
+        receivedPoll = receivedPoll.concat data
+        if err?
+          receivedPoll_err = receivedPoll_err.concat err
 
     afterEach ->
       try watcher?.unwatch()
+      try watcherPoll?.unwatch()
       try fs.unlinkSync file
       file = undefined
 
@@ -40,10 +51,15 @@ describe "FileWatcher", ->
           ws = fs.createWriteStream file, flags: 'a'
           ws.end "TEST DATA 1\nTEST DATA 2\n"
         ), 10
-      waitsFor -> received.length >= 2
+      waitsFor -> (received.length >= 2) and (receivedPoll.length >= 2)
       runs ->
         expect(received_err).toEqual []
         expect(received).toEqual [
+          "TEST DATA 1"
+          "TEST DATA 2"
+        ]
+        expect(receivedPoll_err).toEqual []
+        expect(receivedPoll).toEqual [
           "TEST DATA 1"
           "TEST DATA 2"
         ]
@@ -56,10 +72,16 @@ describe "FileWatcher", ->
         setTimeout (-> ws.write "TEST DATA 1\nTEST D"), 10
         setTimeout (-> ws.write "ATA 2\nTEST D"), 50
         setTimeout (-> ws.end "ATA 3\n" ), 100
-      waitsFor -> received.length >= 3
+      waitsFor -> (received.length >= 3) and (receivedPoll.length >= 3)
       runs ->
         expect(received_err).toEqual []
         expect(received).toEqual [
+          "TEST DATA 1"
+          "TEST DATA 2"
+          "TEST DATA 3"
+        ]
+        expect(receivedPoll_err).toEqual []
+        expect(receivedPoll).toEqual [
           "TEST DATA 1"
           "TEST DATA 2"
           "TEST DATA 3"
@@ -73,10 +95,16 @@ describe "FileWatcher", ->
         setTimeout (-> ws.write "TEST DATA 1\r\nTEST D"), 10
         setTimeout (-> ws.write "ATA 2\r\nTEST D"), 50
         setTimeout (-> ws.end "ATA 3\r\n" ), 100
-      waitsFor -> received.length >= 3
+      waitsFor -> (received.length >= 3) and (receivedPoll.length >= 3)
       runs ->
         expect(received_err).toEqual []
         expect(received).toEqual [
+          "TEST DATA 1"
+          "TEST DATA 2"
+          "TEST DATA 3"
+        ]
+        expect(receivedPoll_err).toEqual []
+        expect(receivedPoll).toEqual [
           "TEST DATA 1"
           "TEST DATA 2"
           "TEST DATA 3"
@@ -102,10 +130,17 @@ describe "FileWatcher", ->
             fs.writeFileSync file, "TEST DATA 6\nTEST DATA 7\n"
         ), 1000
 
-      waitsFor -> received.length >= 4
+      waitsFor -> (received.length >= 4) and (receivedPoll.length >= 4)
       runs ->
         expect(received_err).toEqual []
         expect(received).toEqual [
+          "TEST DATA 1"
+          "TEST DATA 2"
+          "TEST DATA 6"
+          "TEST DATA 7"
+        ]
+        expect(receivedPoll_err).toEqual []
+        expect(receivedPoll).toEqual [
           "TEST DATA 1"
           "TEST DATA 2"
           "TEST DATA 6"
@@ -116,7 +151,8 @@ describe "FileWatcher", ->
       done = false
 
       runs ->
-        watcher.unwatch()
+        watcher?.unwatch()
+        watcherPoll?.unwatch()
         setTimeout (->
           ws = fs.createWriteStream file, flags: 'a'
           ws.end "TEST DATA 1\nTEST DATA 2\n"
@@ -126,6 +162,8 @@ describe "FileWatcher", ->
       runs ->
         expect(received_err).toEqual []
         expect(received).toEqual []
+        expect(receivedPoll_err).toEqual []
+        expect(receivedPoll).toEqual []
 
     it "stops watching when unwatch() is called", ->
       done = false
@@ -137,7 +175,9 @@ describe "FileWatcher", ->
         ), 10
         setTimeout (->
           watcher.unwatch()
+          watcherPoll.unwatch()
           watcher = undefined
+          watcherPoll = undefined
         ), 50
         setTimeout (->
           ws = fs.createWriteStream file, flags: 'w'
@@ -148,6 +188,11 @@ describe "FileWatcher", ->
       runs ->
         expect(received_err).toEqual []
         expect(received).toEqual [
+          "TEST DATA 1"
+          "TEST DATA 2"
+        ]
+        expect(receivedPoll_err).toEqual []
+        expect(receivedPoll).toEqual [
           "TEST DATA 1"
           "TEST DATA 2"
         ]

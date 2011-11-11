@@ -1,5 +1,7 @@
 @import url("http://fonts.googleapis.com/css?family=Inconsolata");
-.LogView{font-size:16px;font-family:'Inconsolata',sans-serif;font-weight:normal;}
+.LogView{font-size:16px;font-family:'Inconsolata',sans-serif;font-weight:normal;position:relative;}
+.LogView.scrollLock > .scrollLockIcon{display:block}
+.LogView > .scrollLockIcon{display:none;background-image:url("/src/images/lock.png");position:fixed;right:5px;top:32px;background-size:100%;width:64px;height:64px;opacity:.65}
 .LogView > .log{padding:0 5px 2px 5px;width:100%;box-sizing:border-box;-moz-box-sizing:border-box;-webkit-box-sizing:border-box;white-space:nowrap;}
 .LogView > .log:hover{background-color:#222;}
 .LogView > .log:hover > *{color:#888}

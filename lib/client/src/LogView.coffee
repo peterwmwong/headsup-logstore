@@ -3,7 +3,8 @@ define [
 ], (Bus)->
   _ = cell::$R
   logCount = 0
-  MAX_LOGS = 5000
+  MAX_LOGS = 2000
+  zeroPad = Array(3).join '0'
 
   machineMap =
     test1: 'http://destiny-test1'
@@ -15,27 +16,23 @@ define [
     '10vm': 'http://destiny10-0vm'
     stage: 'http://172.31.223.245'
 
-  padTime = (t)->
-    t =
-      if t < 10 then "0#{t}"
-      else t
-  
-  padTime3 = (t)->
-    t =
-      if t < 10 then "00#{t}"
-      else if t < 100 then "0#{t}"
-      else "#{t} "
+  padTime = (t,digits)->
+    if (delta = digits - (s = "#{t}").length) > 0
+      zeroPad.slice(0,delta) + s
+    else s
 
   formatDate = (d)->
-    d = new Date d
-    hours = d.getHours()
-    ampm =
-      if hours > 11
-        hours = hours - 11
-        "PM"
-      else
-        "AM"
-    "#{padTime hours}:#{padTime d.getMinutes()}:#{padTime d.getSeconds()}:#{padTime3 d.getMilliseconds()} #{ampm}"
+    if not d then ''
+    else
+      d = new Date d
+      hours = d.getHours()
+      ampm =
+        if hours > 11
+          hours = hours - 11
+          "PM"
+        else
+          "AM"
+      "#{padTime hours, 2}:#{padTime d.getMinutes(), 2}:#{padTime d.getSeconds(), 2}:#{padTime d.getMilliseconds(), 3} #{ampm}"
 
   renderLogs = (logs)->
     for l in logs
@@ -43,34 +40,47 @@ define [
       _ "<div class='log #{l.category}' data-logid='#{l.id}'>",
         _ "<a class='context' #{(url = machineMap[l.context]) and "href='#{url}' target='_blank'" or ''}>", l.context
         _ 'p.ip', ci?.ip or ''
-        _ 'p.date', l.date and formatDate l.date or ''
+        _ 'p.date', formatDate l.date
         _ 'p.siteid', ci?.siteid or ''
         _ 'p.district', ci?.district and "(#{ci.district})" or ''
         _ 'p.cat', l.category
         _ '.msg', l.msg
+
+  render: (_)-> [
+    _ '.scrollLockIcon'
+  ]
     
   afterRender: ->
-    $el = @$el
-    $ = @$
     $window = $(window)
+    prevScrollLock = false
 
-    Bus.on 'log', (logs)->
+    Bus.on 'log', (logs)=>
 
-      # Slice off old logs if MAX_LOGS has been reached
-      if (logCount += logs.length) > MAX_LOGS
-        $('.log').slice(0,logCount - MAX_LOGS).remove()
-        logCount = MAX_LOGS
-
+      # Figure out whether to scroll lock or not based on whether we're scrolled
+      # all the way to the bottom.
       before = $window.scrollTop()
       $window.scrollTop $window.scrollTop()+1
-      after = $window.scrollTop()
+      scrollLock = $window.scrollTop() isnt before
 
-      $el.append renderLogs logs
+      # Show/Hide scroll when scroll lock state changes
+      @$el.toggleClass 'scrollLock', scrollLock if scrollLock isnt prevScrollLock
+      prevScrollLock = scrollLock
 
-      # Don't touch that scroll bar!
-      if before isnt after
-        $window.scrollTop before
+      # If the scroll bar isn't at the bottom, put it back.
+      $window.scrollTop before if scrollLock
+
+      @$el.append renderLogs logs
         
       # Scrolled to all the way to the bottom? Auto-Scroll!
-      else
-        $window.scrollTop $el.height()
+      $window.scrollTop @$el.height() if not scrollLock
+
+      # Slice off old logs if MAX_LOGS has been reached.
+      # Do this ONLY if we're scrolled to the bottom,
+      # otherwise it defeats the purpose of scrolling up
+      # to lock onto a page of logs.
+      # ... Unless we've accumulated twice MAX_LOGS.
+      logCount += logs.length
+      if logCount > (if scrollLock then 2*MAX_LOGS else MAX_LOGS)
+        @$('.log').slice(0,logCount - MAX_LOGS).remove()
+        logCount = MAX_LOGS
+        

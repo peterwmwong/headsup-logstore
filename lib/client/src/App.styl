@@ -14,13 +14,16 @@ h1,h2,h3,h4,h5
 header-height = 22px
 
 .App
+  z-index 1
 
   > .Header
     position fixed
     width 100%
     top 0
+    z-index 2
 
   > .LogView
     padding-top header-height + 3px
     padding-bottom 5px
     width 100%
+    z-index 1

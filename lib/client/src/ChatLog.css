@@ -1,8 +1,0 @@
-.ChatLog{font-size:18px;}
-.ChatLog > .chat{padding:2px 5px 2px 5px;color:#ddd;display:box;display:-webkit-box;display:-moz-box;-webkit-box-orient:horizontal;-moz-box-orient:horizontal;width:100%;box-sizing:border-box;-moz-box-sizing:border-box;-webkit-box-sizing:border-box;}
-.ChatLog > .chat.self{color:#666;}
-.ChatLog > .chat.self > .from{color:#444}
-.ChatLog > .chat > .datetime{min-width:48px;color:#444;margin:0 10px 0 2px;font-size:12px;line-height:24px}
-.ChatLog > .chat > .from{color:#888;font-weight:bold;overflow:hidden;margin:0 10px 0 0;white-space:nowrap;text-overflow:ellipsis;}
-.ChatLog > .chat > .from::after{content:":";font-weight:normal}
-.ChatLog > .chat > .msg{box-flex:1;-webkit-box-flex:1;-moz-box-flex:1;word-wrap:break-word}

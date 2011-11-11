@@ -1,4 +1,5 @@
 body{font-family:Helvetica,Arial,sans-serif;background-color:#1a1a1a;color:#888}
 h1,h2,h3,h4,h5{margin:0;padding:0}
-.App > .Header{position:fixed;width:100%;top:0}
-.App > .LogView{padding-top:25px;padding-bottom:5px;width:100%}
+.App{z-index:1;}
+.App > .Header{position:fixed;width:100%;top:0;z-index:2}
+.App > .LogView{padding-top:25px;padding-bottom:5px;width:100%;z-index:1}

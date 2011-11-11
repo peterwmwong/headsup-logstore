@@ -51,4 +51,4 @@ deps:
 	npm install
 
 clean: 
-	rm client/src/bootstrap.*
+	rm lib/client/src/bootstrap.*

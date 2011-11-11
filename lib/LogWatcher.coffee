@@ -22,7 +22,7 @@ processConfig = (cfgFile, cb)->
     if not c then L "#{config} does not contain JSON."
     else cb c
 
-processConfig config, ({context, redis_host, redis_port, redis_dbid})->
+processConfig config, ({poll, context, redis_host, redis_port, redis_dbid})->
   if not path.existsSync(logfile) or not fs.lstatSync(logfile).isFile()
     L "#{logfile} is not a file."
   else
@@ -35,7 +35,7 @@ processConfig config, ({context, redis_host, redis_port, redis_dbid})->
         if err then L "Could not connect to redis server at #{redis_host}:#{redis_port}"
         else
           ctx = undefined
-          watcher = FileWatcher.watch logfile, (err, lines)->
+          watcher = FileWatcher.watch logfile, {poll}, (err, lines)->
             if err
               L "Error watching #{logfile}, err=", err
               watcher.unwatch()

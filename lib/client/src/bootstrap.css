@@ -3,7 +3,7 @@ h1,h2,h3,h4,h5{margin:0;padding:0}
 .App > .Header{position:fixed;width:100%;top:0}
 .App > .LogView{padding-top:25px;padding-bottom:5px;width:100%}
 @import url("http://fonts.googleapis.com/css?family=Inconsolata");
-.LogView{font-size:16px;font-family:"Inconsolata",sans-serif;font-weight:normal;}
+.LogView{font-size:16px;font-family:'Inconsolata',sans-serif;font-weight:normal;}
 .LogView > .log{padding:0 5px 2px 5px;width:100%;box-sizing:border-box;-moz-box-sizing:border-box;-webkit-box-sizing:border-box;white-space:nowrap;}
 .LogView > .log:hover{background-color:#222;}
 .LogView > .log:hover > *{color:#888}
@@ -22,7 +22,7 @@ h1,h2,h3,h4,h5{margin:0;padding:0}
 .LogView > .log > .cat{min-width:45px}
 .LogView > .log > .ip{color:#444;overflow:hidden;margin:0 10px 0 0;min-width:105px;white-space:nowrap;text-overflow:ellipsis}
 .LogView > .log > .msg{white-space:nowrap;display:inline-block;line-height:14px;color:#444}
-.Header{background-color:#333;font-size:10px;height:22px;line-height:24px;padding:2px 5px 2px 5px;}
+.Header{background-color:#333;-webkit-box-shadow:0 1px 2px #000;-moz-box-shadow:0 1px 2px #000;box-shadow:0 1px 2px #000;font-size:10px;height:22px;line-height:24px;padding:2px 5px 2px 5px;}
 .Header > span{display:inline-block;margin:0 10px 0 2px}
 .Header > .context{width:47px}
 .Header > .ip{width:105px;margin:0 10px 0 0}

@@ -1,20 +1,12 @@
 define [
   'Bus'
-], (Bus)->
+  'MachineMap'
+  'IPMap'
+], (Bus,MachineMap,IPMap)->
   _ = cell::$R
   logCount = 0
   MAX_LOGS = 2000
   zeroPad = Array(3).join '0'
-
-  machineMap =
-    test1: 'http://destiny-test1'
-    test2: 'http://destiny-test2'
-    test3b: 'http://destiny-test3b'
-    test5b: 'http://destiny-test5b'
-    test6: 'http://destiny-test6'
-    sc: 'http://destinysc'
-    '10vm': 'http://destiny10-0vm'
-    stage: 'http://172.31.223.245'
 
   padTime = (t,digits)->
     if (delta = digits - (s = "#{t}").length) > 0
@@ -38,8 +30,11 @@ define [
     for l in logs
       ci = l.clientInfo
       _ "<div class='log #{l.category}' data-logid='#{l.id}'>",
-        _ "<a class='context' #{(url = machineMap[l.context]) and "href='#{url}' target='_blank'" or ''}>", l.context
-        _ 'p.ip', ci?.ip or ''
+        _ "<a class='context' #{(url = MachineMap[l.context]) and "href='#{url}' target='_blank'" or ''}>", l.context
+        _ 'p.ip',
+          if ci?.ip
+            IPMap[ci.ip] or ci.ip
+          else ''
         _ 'p.date', formatDate l.date
         _ 'p.siteid', ci?.siteid or ''
         _ 'p.district', ci?.district and "(#{ci.district})" or ''

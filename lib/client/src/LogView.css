@@ -4,7 +4,7 @@
 .LogView > .scrollLockIcon{display:none;background-image:url("/src/images/lock.png");position:fixed;right:5px;top:32px;background-size:100%;width:64px;height:64px;opacity:.65}
 .LogView > .log{padding:0 5px 2px 5px;width:100%;box-sizing:border-box;-moz-box-sizing:border-box;-webkit-box-sizing:border-box;white-space:nowrap;}
 .LogView > .log:hover{background-color:#222;}
-.LogView > .log:hover > *{color:#888}
+.LogView > .log:hover > .context,.LogView > .log:hover > .date,.LogView > .log:hover > .siteid,.LogView > .log:hover > .district,.LogView > .log:hover > .cat,.LogView > .log:hover > .ip,.LogView > .log:hover > .msg{color:#888}
 .LogView > .log.WARN:hover{background-color:#332d12;}
 .LogView > .log.WARN:hover > p,.LogView > .log.WARN:hover > a,.LogView > .log.WARN:hover > div{color:#c8ae44}
 .LogView > .log.WARN > .context,.LogView > .log.WARN > .date,.LogView > .log.WARN > .siteid,.LogView > .log.WARN > .district,.LogView > .log.WARN > .cat,.LogView > .log.WARN > .ip{color:#665923}

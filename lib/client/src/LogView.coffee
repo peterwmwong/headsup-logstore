@@ -5,7 +5,7 @@ define [
 ], (Bus,MachineMap,IPMap)->
   _ = cell::$R
   logCount = 0
-  MAX_LOGS = 2000
+  MAX_LOGS = 5000
   zeroPad = Array(3).join '0'
 
   padTime = (t,digits)->

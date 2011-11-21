@@ -22,10 +22,18 @@ processConfig = (cfgFile, cb)->
     if not c then L "#{config} does not contain JSON."
     else cb c
 
-processConfig config, ({poll, context, redis_host, redis_port, redis_dbid})->
+processConfig config, ({poll, context, redis_host, redis_port, redis_dbid, filterOutByCategory})->
   if not path.existsSync(logfile) or not fs.lstatSync(logfile).isFile()
     L "#{logfile} is not a file."
   else
+    filterFunc =
+      if typeof filterOutByCategory is 'string'
+        (l)->
+          console.log "filterOutByCategory:", filterOutByCategory, "l:", l
+          l.category isnt filterOutByCategory
+      else
+        -> true
+
     lp = new LogPublisher
       context: context
       host: redis_host
@@ -40,4 +48,4 @@ processConfig config, ({poll, context, redis_host, redis_port, redis_dbid})->
               L "Error watching #{logfile}, err=", err
               watcher.unwatch()
             else
-              lp.log (ctx = parse(l, ctx) for l in lines when l)
+              lp.log (ctx for l in lines when l and (ctx = parse(l, ctx)) and filterFunc(ctx))

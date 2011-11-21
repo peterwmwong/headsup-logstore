@@ -10,7 +10,9 @@ L = console.log.bind console
 
 logWatcherFile = path.resolve './lib/LogWatcher.coffee'
 execLogWatcher = (args...)->
-  spawn process.execPath, [path.resolve('./node_modules/coffee-script/bin/coffee'), logWatcherFile].concat(args)
+  lw = spawn process.execPath, [path.resolve('./node_modules/coffee-script/bin/coffee'), logWatcherFile].concat(args)
+  #FOR DEBUGGING: lw.stdout.on 'data', (data)-> console.log 'LW stdout:', data.toString()
+  lw
 
 describe "LogWatcher", ->
 
@@ -128,6 +130,57 @@ describe "LogWatcher", ->
 
       setTimeout (->
         ws.end "2010-10-12 08:41:31\tINFO\tCatalina\t(127.0.0.1 ID:2 siteID:10 userID:101)\t Initialization processed in 422 ms\n"
+      ), 500
+
+
+    it "publishes log entries when ./serverlog.txt is written to, filters entries based on {filterOutByCategory} config option", ->
+      json = path.resolve "#{dir}/goodConfig.json"
+      fs.writeFileSync json,
+        JSON.stringify
+          context:'test'
+          redis_host:mockRedis.host
+          redis_port:mockRedis.port
+          redis_dbid:curdbid
+          filterOutByCategory: 'INFO'
+
+      logfile = path.resolve "#{dir}/logFile.txt"
+      fs.writeFileSync logfile, ''
+      ws = fs.createWriteStream logfile, flags: 'a'
+
+      lw = execLogWatcher json, logfile
+      ls = new LogStore host:mockRedis.host, port:mockRedis.port, dbid: curdbid
+      @after ->
+        try ws?.writable and ws?.end()
+        try ls?.end()
+        try lw?.kill()
+
+      mockLogs = [{
+        date: new Date(2010, 10, 12, 8, 41, 31).getTime()
+        category: 'WARN'
+        codeSource: 'Catalina'
+        clientInfo:
+          ip: '127.0.0.1'
+          id: '2'
+          siteid: '10'
+          userid: '101'
+        msg: 'Initialization processed in 422 ms'
+      }]
+
+      expectedLogs = (addIdContext l, i, 'test' for l,i in mockLogs)
+      runUntil (done)->
+        ls.on 'log', (logs)->
+          expect(logs).toEqual expectedLogs
+          ls.get {}, (err, entries)->
+            expect(entries).toEqual expectedLogs
+            done()
+
+      setTimeout (->
+        ws.end do->
+          """
+          2010-10-12 08:41:31\tINFO\tCatalina\t(127.0.0.1 ID:2 siteID:10 userID:101)\t NOPE SHOULDN'T PUBLISH
+          2010-10-12 08:41:31\tWARN\tCatalina\t(127.0.0.1 ID:2 siteID:10 userID:101)\t Initialization processed in 422 ms
+
+          """
       ), 500
 
     it "MOCK REDIS TEARDOWN", ->

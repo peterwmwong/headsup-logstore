@@ -28,9 +28,7 @@ processConfig config, ({poll, context, redis_host, redis_port, redis_dbid, filte
   else
     filterFunc =
       if typeof filterOutByCategory is 'string'
-        (l)->
-          console.log "filterOutByCategory:", filterOutByCategory, "l:", l
-          l.category isnt filterOutByCategory
+        (l)-> l.category isnt filterOutByCategory
       else
         -> true
 

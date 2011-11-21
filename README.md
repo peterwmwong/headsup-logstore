@@ -2,10 +2,36 @@ headsup-logstore: Log parsing, storage and publishing
 =====================================================
 
 
-Getting Started
----------------
+Getting Started with Single-Server-Standalone Setup (No Redis Server)
+---------------------------------------------------------------------
 
-### [Install node.js and NPM](https://github.com/joyent/node/wiki/Installation)
+### [Install node.js (>= v0.6.0) and NPM](https://github.com/joyent/node/wiki/Installation)
+
+### Get the code
+
+    > git clone git://github.com/peterwmwong/headsup-logstore.git
+    > cd headsup-logstore
+
+### Get dependencies
+
+    > make deps
+
+### Run
+
+    > node_modules/.bin/coffee lib/server/LogWatcherService.coffee {Path to serverlog.txt}
+
+### To the browser!
+
+    http://{HOST}:8888/index.html?source={HOST}:8888
+
+Yes, I know it looks silly. Well so do you. :)
+    
+
+
+Getting Started (Developing)
+----------------------------
+
+### [Install node.js (>= v0.6.0) and NPM](https://github.com/joyent/node/wiki/Installation)
 
 ### Linux only: [Install redis](http://redis.io/download)
 
@@ -13,7 +39,7 @@ Getting Started
 
 ### Get the code
 
-    > git://github.com/peterwmwong/headsup-logstore.git
+    > git clone git://github.com/peterwmwong/headsup-logstore.git
     > cd headsup-logstore
 
 ### Run specs
@@ -42,6 +68,7 @@ An external test redis server must be used by the specs.
     > npm install node-inspector
     > node-inspector &
     > node --debug node_modules\jasmine-node\lib\jasmine-node\cli.js --coffee spec\LogStore.spec.coffee
+
 
 Credit
 ------

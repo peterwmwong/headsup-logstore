@@ -1,7 +1,7 @@
 headsup-logstore: Log parsing, storage and publishing
 =====================================================
 
-<img width="916" src="https://github.com/peterwmwong/xoltop/raw/master/doc/screenshot01.png" border="0"/>
+<img width="916px" src="https://github.com/peterwmwong/headsup-logstore/raw/master/doc/screenshot01.png" border="0"/>
 
 
 Getting Started with Single-Server-Standalone Setup (No Redis Server)

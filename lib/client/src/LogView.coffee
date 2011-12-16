@@ -19,8 +19,8 @@ define [
       d = new Date d
       hours = d.getHours()
       ampm =
-        if hours > 11
-          hours = hours - 11
+        if hours > 12
+          hours = hours - 12
           "PM"
         else
           "AM"

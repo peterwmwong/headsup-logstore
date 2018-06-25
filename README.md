@@ -79,6 +79,6 @@ Credit
 * [Node](http://nodejs.org/) - Awesome <EOM>
 * [Node Redis](https://github.com/mranney/node_redis) - Redis client for Node.js
 * [npm](http://npmjs.org/) - Node Package Manager
-* [Jasmine](http://pivotal.github.com/jasmine/) - BDD for JavaScript
+* [Jasmine](https://jasmine.github.io/) - BDD for JavaScript
 * [Jasmine-Node](http://jquery.com/) - Jasmine Node.js integration
 * [Redis](http://redis.io/) - Key-Value Store
